@@ -1,146 +1,109 @@
 /*************************************************
  * PT PUTRA TIMUR JAYA
- * UI ENGINE V2
+ * UI ENGINE V4
+ * Group By Teknisi
  *************************************************/
 
+let groupedData = {};
+let selectedTechnician = null;
 
-//=======================================
-// HITUNG DASHBOARD
-//=======================================
+//=====================================
+// DASHBOARD
+//=====================================
 
 function dashboardSummary(){
 
     document.getElementById("totalWO").innerHTML = monitoringData.length;
 
-    let completed=0;
-    let config=0;
-    let ogp=0;
-    let kendala=0;
+    let completed = 0;
+    let config = 0;
+    let ogp = 0;
+    let kendala = 0;
 
-    const teknisi=new Set();
+    const teknisi = new Set();
 
     monitoringData.forEach(row=>{
 
         teknisi.add(row.teknisi);
 
-        let status=(row.status || "").toUpperCase();
+        const status=(row.status||"").toUpperCase();
 
-        if(status.includes("COMPLETED") || status.includes("ACTCOMP"))
+        if(status.includes("COMPLETED") || status.includes("ACTCOMP")){
+
             completed++;
 
-        else if(status.includes("CONFIG"))
+        }else if(status.includes("CONFIG")){
+
             config++;
 
-        else if(status.includes("OGP"))
+        }else if(status.includes("OGP")){
+
             ogp++;
 
-        else
+        }else{
+
             kendala++;
+
+        }
 
     });
 
-    document.getElementById("completed").innerHTML=completed;
-    document.getElementById("config").innerHTML=config;
-    document.getElementById("ogp").innerHTML=ogp;
-    document.getElementById("kendala").innerHTML=kendala;
-    document.getElementById("teknisiAktif").innerHTML=teknisi.size;
+    document.getElementById("completed").innerHTML = completed;
+    document.getElementById("config").innerHTML = config;
+    document.getElementById("ogp").innerHTML = ogp;
+    document.getElementById("kendala").innerHTML = kendala;
+    document.getElementById("teknisiAktif").innerHTML = teknisi.size;
 
 }
+//=====================================
+// GROUP TEKNISI
+//=====================================
 
+function groupTechnicians(){
 
-
-//=======================================
-// LIST WO
-//=======================================
-
-function buildWOList(){
-
-    const list = document.getElementById("woList");
-
-    let html = "";
+    groupedData={};
 
     monitoringData.forEach((row,index)=>{
 
-        html += `
-        <div class="wo-card" onclick="zoomToWO(${index})">
+        if(!groupedData[row.teknisi]){
 
-            <label>
+            groupedData[row.teknisi]={
 
-                <input
-                    type="checkbox"
-                    checked
-                    onclick="event.stopPropagation();toggleWO(${index},this.checked)">
+                nama:row.teknisi,
 
-                <span class="wo-title">${row.wo}</span>
+                wo:[],
 
-            </label>
+                visible:true
 
-            <div class="wo-tech">
-                👷 ${row.teknisi}
-            </div>
+            };
 
-            <div class="wo-status">
-                ${statusBadge(row.status)}
-            </div>
+        }
 
-        </div>
-        `;
+        row.index=index;
+
+        groupedData[row.teknisi].wo.push(row);
 
     });
 
-    list.innerHTML = html;
-
 }
+//=====================================
+// BUILD LIST TEKNISI
+//=====================================
 
+function buildWOList(){
 
+    groupTechnicians();
 
-//=======================================
-// WARNA STATUS
-//=======================================
+    const list=document.getElementById("woList");
 
-function statusBadge(status){
+    let html="";
 
-    status=(status || "").toUpperCase();
+    Object.values(groupedData).forEach(tech=>{
 
-    let color="#dc2626";
+        html+=buildTechnicianCard(tech);
 
-    if(status.includes("COMPLETED")) color="#16a34a";
+    });
 
-    if(status.includes("ACTCOMP")) color="#16a34a";
-
-    if(status.includes("CONFIG")) color="#2563eb";
-
-    if(status.includes("OGP")) color="#facc15";
-
-    return `
-
-    <span
-    style="
-    color:white;
-    background:${color};
-    padding:4px 10px;
-    border-radius:8px;
-    font-size:12px;
-    ">
-
-    ${status}
-
-    </span>
-
-    `;
-
-}
-
-
-
-//=======================================
-// CHECKLIST
-//=======================================
-
-function toggleWO(index,checked){
-
-    monitoringData[index].visible=checked;
-
-    drawMarkers();
+    list.innerHTML=html;
 
 }
