@@ -55,44 +55,40 @@ function dashboardSummary(){
 
 function buildWOList(){
 
-    let html="";
+    const list = document.getElementById("woList");
+
+    let html = "";
 
     monitoringData.forEach((row,index)=>{
 
-        html+=`
-
+        html += `
         <div class="wo-card" onclick="zoomToWO(${index})">
 
-    <label>
+            <label>
 
-        <input
-            type="checkbox"
-            checked
-            onclick="event.stopPropagation();toggleWO(${index},this.checked)">
+                <input
+                    type="checkbox"
+                    checked
+                    onclick="event.stopPropagation();toggleWO(${index},this.checked)">
 
-        <span class="wo-title">${row.wo}</span>
+                <span class="wo-title">${row.wo}</span>
 
-    </label>
+            </label>
 
-    <div class="wo-tech">
+            <div class="wo-tech">
+                👷 ${row.teknisi}
+            </div>
 
-        👷 ${row.teknisi}
+            <div class="wo-status">
+                ${statusBadge(row.status)}
+            </div>
 
-    </div>
-
-    <div class="wo-status">
-
-        ${statusBadge(row.status)}
-
-    </div>
-
-</div>
-
+        </div>
         `;
 
     });
 
-    document.getElementById("detailWO").innerHTML=html;
+    list.innerHTML = html;
 
 }
 
