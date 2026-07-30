@@ -107,3 +107,124 @@ function buildWOList(){
     list.innerHTML=html;
 
 }
+//=====================================
+// CARD TEKNISI
+//=====================================
+
+function buildTechnicianCard(tech){
+
+    let html = "";
+
+    html += `
+
+    <div class="tech-card">
+
+        <div class="tech-header"
+             onclick="toggleTechnician('${tech.nama}')">
+
+            <div>
+
+                <div class="tech-name">
+
+                    👷 ${tech.nama}
+
+                </div>
+
+                <div class="tech-count">
+
+                    ${tech.wo.length} WO
+
+                </div>
+
+            </div>
+
+            <div>
+
+                ▼
+
+            </div>
+
+        </div>
+
+        <div
+            id="tech-${slugify(tech.nama)}"
+            class="tech-body">
+
+    `;
+
+    tech.wo.forEach((wo)=>{
+
+        html += `
+
+        <div
+            class="wo-row"
+            onclick="zoomToWO(${wo.index})">
+
+            <input
+                type="checkbox"
+                checked
+                onclick="event.stopPropagation();toggleWO(${wo.index},this.checked)">
+
+            <span>
+
+                ${wo.wo}
+
+            </span>
+
+            ${statusBadge(wo.status)}
+
+        </div>
+
+        `;
+
+    });
+
+    html += `
+
+        </div>
+
+    </div>
+
+    `;
+
+    return html;
+
+}
+//=====================================
+// OPEN CLOSE
+//=====================================
+
+function toggleTechnician(nama){
+
+    const id = "tech-"+slugify(nama);
+
+    const div=document.getElementById(id);
+
+    if(div.style.display=="none"){
+
+        div.style.display="block";
+
+    }else{
+
+        div.style.display="none";
+
+    }
+
+}
+//=====================================
+// SLUG
+//=====================================
+
+function slugify(text){
+
+    return text
+
+        .replace(/\s+/g,"-")
+
+        .replace(/&/g,"")
+
+        .replace(/\//g,"")
+
+        .toLowerCase();
+
+}
