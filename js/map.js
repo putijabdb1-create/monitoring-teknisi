@@ -110,17 +110,27 @@ function drawMarkers(){
 
         className:"",
 
-        html:`
+html:`
 
-        <div class="tech-marker ${markerColor(row.status)}">
+<div class="tech-marker">
 
-            👷<br>
+    <span style="font-size:16px">👷</span>
 
-            ${shortName(row.teknisi)}
+    <span
+        style="
+            color:${statusColor(row.status)};
+            text-shadow:
+                1px 1px 2px white,
+                -1px -1px 2px white;
+        ">
 
-        </div>
+        ${shortName(row.teknisi)}
 
-        `,
+    </span>
+
+</div>
+
+`,
 
         iconSize:[80,40],
 
@@ -281,5 +291,20 @@ function shortName(nama){
     nama=nama.replace("&","");
 
     return nama;
+
+}
+function statusColor(status){
+
+    status=(status||"").toUpperCase();
+
+    if(status.includes("ACTCOMP")) return "#16a34a";
+
+    if(status.includes("COMPLETED")) return "#16a34a";
+
+    if(status.includes("CONFIG")) return "#2563eb";
+
+    if(status.includes("OGP")) return "#f59e0b";
+
+    return "#dc2626";
 
 }
