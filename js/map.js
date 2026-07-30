@@ -73,18 +73,27 @@ function createIcon(color){
 
         className:"",
 
-        html:`
+ html:`
 
-        <div style="
-            width:18px;
-            height:18px;
-            border-radius:50%;
-            background:${color};
-            border:3px solid white;
-            box-shadow:0 0 8px rgba(0,0,0,.4);
-        "></div>
+<div class="tech-marker">
 
-        `,
+    <span class="helmet">
+
+        <i class="bi bi-person-workspace"></i>
+
+    </span>
+
+    <span
+        class="name"
+        style="color:${statusColor(row.status)}">
+
+        ${shortName(row.teknisi)}
+
+    </span>
+
+</div>
+
+`,
 
         iconSize:[18,18]
 
