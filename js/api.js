@@ -34,16 +34,16 @@ async function loadMonitoring(){
         if(!response.ok){
             throw new Error("HTTP " + response.status);
         }
-			monitoringData = await response.json();
 
-		filteredData = [...monitoringData];
+        monitoringData = await response.json();
 
-		// isi dropdown filter
-		loadFilter();
+        filteredData = [...monitoringData];
 
-		}
-		// jalankan filter pertama kali
-		applyFilter();
+        // isi dropdown filter
+        loadFilter();
+
+        // jalankan filter pertama kali
+        applyFilter();
 
     }
     catch(error){
