@@ -2,8 +2,6 @@
  * PT PUTRA TIMUR JAYA
  * UI ENGINE V2
  *************************************************/
-
-
 //=======================================
 // HITUNG DASHBOARD
 //=======================================
@@ -36,7 +34,6 @@ function dashboardSummary(){
 
         else
             kendala++;
-
     });
 
     document.getElementById("completed").innerHTML=completed;
@@ -44,10 +41,7 @@ function dashboardSummary(){
     document.getElementById("ogp").innerHTML=ogp;
     document.getElementById("kendala").innerHTML=kendala;
     document.getElementById("teknisiAktif").innerHTML=teknisi.size;
-
 }
-
-
 
 //=======================================
 // LIST WO
@@ -89,11 +83,7 @@ function buildWOList(){
     });
 
     list.innerHTML = html;
-
 }
-
-
-
 //=======================================
 // WARNA STATUS
 //=======================================
@@ -128,10 +118,7 @@ function statusBadge(status){
     </span>
 
     `;
-
 }
-
-
 
 //=======================================
 // CHECKLIST
