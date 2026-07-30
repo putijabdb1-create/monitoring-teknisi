@@ -472,7 +472,7 @@ body{
    MARKER TEKNISI
 ======================================= */
 
-.tech-marker{
+.{
 
     background:#2563eb;
 
@@ -496,26 +496,19 @@ body{
 
 }
 
-.tech-marker.green{
+.tech-marker{
 
-    background:#16a34a;
+    display:flex;
+    align-items:center;
+    gap:4px;
 
-}
+    background:transparent;
+    border:none;
+    box-shadow:none;
 
-.tech-marker.blue{
+    font-size:11px;
+    font-weight:700;
 
-    background:#2563eb;
-
-}
-
-.tech-marker.yellow{
-
-    background:#f59e0b;
-
-}
-
-.tech-marker.red{
-
-    background:#dc2626;
+    white-space:nowrap;
 
 }
