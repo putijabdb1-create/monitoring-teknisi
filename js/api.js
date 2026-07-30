@@ -30,17 +30,29 @@ async function loadMonitoring() {
         document.getElementById("detailWO").innerHTML =
         "Mengambil data dari Google Sheet...";
 
-    const response = await fetch(
-    API_URL + "?action=getData",
-        {
-            method: "GET",
-            redirect: "follow"
-        }
-    );
+async function loadMonitoring(){
 
-    if (!response.ok) {
-        throw new Error("HTTP " + response.status);
-    }
+    try{
+
+        const response = await fetch(
+
+            API_URL + "?action=getData",
+
+            {
+                method:"GET",
+                mode:"cors",
+                cache:"no-cache"
+            }
+
+        );
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP "+response.status
+            );
+
+        }
 
         monitoringData = await response.json();
 
@@ -54,13 +66,11 @@ async function loadMonitoring() {
 
     }
 
-    catch (err) {
+    catch(error){
 
-        console.error(err);
+        console.error(error);
 
-        alert(err.message);
-
-        console.log(err);
+        alert(error.message);
 
     }
 
