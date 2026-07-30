@@ -203,9 +203,9 @@ function statusBadge(status){
 
 function toggleWO(index,checked){
 
-    monitoringData[index].visible=checked;
+    monitoringData[index].visible = checked;
 
-    drawMarkers();
+    applyFilter();
 
 }
 //=======================================
