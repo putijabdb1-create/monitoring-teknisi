@@ -131,9 +131,9 @@ function buildWOList(){
                 <label>
 
                     <input
-                        type="checkbox"
-                        checked
-                        onclick="event.stopPropagation();toggleWO(${row.index},this.checked)">
+					type="checkbox"
+					${row.visible !== false ? "checked" : ""}
+					onchange="toggleWO(${row.index},this.checked)">
 
                     ${row.wo}
 
