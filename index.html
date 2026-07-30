@@ -123,72 +123,118 @@
     </section>
 
 
-    <!-- ================= FILTER ================= -->
+<!-- ================= FILTER ================= -->
 
-    <section class="filter">
+<section class="filter">
 
-        <input
-            id="filterTanggal"
-            class="form-control"
-            type="date">
+    <!-- Tanggal -->
+    <input
+        id="filterTanggal"
+        class="form-control"
+        type="date">
 
-        <!-- ================= MULTI TEKNISI ================= -->
+    <!-- Multi Teknisi -->
+    <div class="multi-select" id="teknisiBox">
 
-<div class="multi-select" id="teknisiBox">
+        <button type="button" class="multi-btn" id="btnTeknisi">
+            👷 Semua Teknisi
+            <i class="bi bi-chevron-down"></i>
+        </button>
 
-    <button
-        type="button"
-        class="multi-btn"
-        id="btnTeknisi">
+        <div class="multi-dropdown" id="dropdownTeknisi">
 
-        👷 Semua Teknisi
+            <input
+                type="text"
+                id="searchTeknisi"
+                class="form-control"
+                placeholder="Cari Teknisi...">
 
-        <i class="bi bi-chevron-down"></i>
+            <div class="multi-action">
 
-    </button>
+                <button
+                    type="button"
+                    id="checkAllTeknisi"
+                    class="btn btn-sm btn-primary">
+                    Semua
+                </button>
 
-    <div
-        class="multi-dropdown"
-        id="dropdownTeknisi">
+                <button
+                    type="button"
+                    id="clearTeknisi"
+                    class="btn btn-sm btn-outline-secondary">
+                    Clear
+                </button>
 
-        <input
-            type="text"
-            id="searchTeknisi"
-            class="form-control"
-            placeholder="Cari Teknisi...">
+            </div>
 
-        <div class="multi-action">
-
-            <button
-                type="button"
-                id="checkAllTeknisi"
-                class="btn btn-sm btn-primary">
-
-                Semua
-
-            </button>
-
-            <button
-                type="button"
-                id="clearTeknisi"
-                class="btn btn-sm btn-outline-secondary">
-
-                Clear
-
-            </button>
-
-        </div>
-
-        <div
-            id="listTeknisi"
-            class="multi-list">
+            <div id="listTeknisi" class="multi-list"></div>
 
         </div>
 
     </div>
 
-</div>
+    <!-- Multi Work Zone -->
+    <div class="multi-select" id="zoneBox">
 
+        <button type="button" class="multi-btn" id="btnZone">
+            📍 Semua Work Zone
+            <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div class="multi-dropdown" id="dropdownZone">
+
+            <input
+                type="text"
+                id="searchZone"
+                class="form-control"
+                placeholder="Cari Work Zone...">
+
+            <div class="multi-action">
+
+                <button
+                    type="button"
+                    id="checkAllZone"
+                    class="btn btn-sm btn-primary">
+                    Semua
+                </button>
+
+                <button
+                    type="button"
+                    id="clearZone"
+                    class="btn btn-sm btn-outline-secondary">
+                    Clear
+                </button>
+
+            </div>
+
+            <div id="listZone" class="multi-list"></div>
+
+        </div>
+
+    </div>
+
+    <!-- Search -->
+    <input
+        id="searchWO"
+        class="form-control"
+        placeholder="Cari WO / SC / ODP">
+
+    <!-- Refresh -->
+    <button
+        id="btnRefresh"
+        class="btn btn-primary">
+
+        <i class="bi bi-arrow-clockwise"></i>
+
+        Refresh
+
+    </button>
+
+</section>
+
+<!-- Filter Aktif -->
+
+<div id="activeFilter" class="active-filter"></div>
 
 <!-- ================= MULTI WORKZONE ================= -->
 
