@@ -71,57 +71,59 @@ function drawMarkers(){
 
     clearMarkers();
 
-    filteredData.forEach((row,index)=>{
+    filteredData.forEach((row)=>{
 
         if(row.visible===false) return;
 
-        if(!row.lat || !row.lng) return;
+        if(row.lat==null || row.lng==null) return;
 
-       const icon=L.divIcon({
+        const originalIndex = monitoringData.indexOf(row);
 
-        className:"",
+        const icon = L.divIcon({
 
-html:`
+            className:"",
 
-<div class="tech-marker">
+            html:`
 
-    <i class="bi bi-person-workspace helmet"></i>
+            <div class="tech-marker">
 
-    <span
-        class="name"
-        style="color:${statusColor(row.status)}">
+                <i class="bi bi-person-workspace helmet"></i>
 
-        ${shortName(row.teknisi)}
+                <span
+                    class="name"
+                    style="color:${statusColor(row.status)}">
 
-    </span>
+                    ${shortName(row.teknisi)}
 
-</div>
+                </span>
 
-`,
+            </div>
 
-		iconSize:[70,20],
+            `,
 
-		iconAnchor:[10,10]
+            iconSize:[70,20],
+            iconAnchor:[10,10]
+
+        });
+
+        const marker = L.marker(
+            [row.lat,row.lng],
+            {
+                icon:icon
+            }
+        );
+
+        marker.addTo(markerGroup);
+
+        marker.on("click",function(){
+
+            showDetail(originalIndex);
+
+        });
+
     });
 
- const marker = L.marker(
-    [row.lat,row.lng],
-    {
-        icon:icon
-    }
-);
-
-marker.addTo(markerGroup);
-
-marker.on("click", function () {
-
-    showDetail(index);
-
-});
-
-    });   // <-- penutup forEach
-
-}         // <-- penutup drawMarkers
+}
 
 // =========================
 // DETAIL WO
