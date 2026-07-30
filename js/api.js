@@ -34,17 +34,39 @@ async function loadMonitoring(){
         if(!response.ok){
             throw new Error("HTTP " + response.status);
         }
-		monitoringData = await response.json();
+			monitoringData = await response.json();
 
 		filteredData = [...monitoringData];
 
-		console.log(filteredData);
+		// isi dropdown filter
+		loadFilter();
+		function loadFilter(){
 
-		dashboardSummary();
+  		  const teknisi = document.getElementById("filterTeknisi");
+  		  const tanggal = document.getElementById("filterTanggal");
+   			const workzone = document.getElementById("filterWorkZone");
 
-		buildWOList();
+ 		   // reset
+ 		   teknisi.innerHTML='<option value="">Semua Teknisi</option>';
 
-		drawMarkers();
+  		  if(workzone){
+   		     workzone.innerHTML='<option value="">Semua Work Zone</option>';
+  		  }
+
+   		 const listTeknisi=[...new Set(
+        monitoringData.map(x=>x.teknisi)
+   		 )].sort();
+
+  		  listTeknisi.forEach(n=>{
+
+   		     teknisi.innerHTML+=
+  		      `<option value="${n}">${n}</option>`;
+
+  		  });
+
+		}
+		// jalankan filter pertama kali
+		applyFilter();
 
     }
     catch(error){
