@@ -17,6 +17,7 @@ let filteredData = [];     // Data hasil filter
 
 let selectedTeknisi = [];
 let selectedZone = [];
+let multiSelectLoaded = false;
 // ===============================
 // LOAD DATA
 // ===============================
@@ -41,14 +42,21 @@ async function loadMonitoring(){
             throw new Error("HTTP " + response.status);
         }
 
-        monitoringData = await response.json();
+	monitoringData = await response.json();
+	
+	filteredData = [...monitoringData];
 
-        filteredData = [...monitoringData];
+	loadFilter();
 
-        loadFilter();
-		initMultiSelect();
-        applyFilter();
+	if(!multiSelectLoaded){
 
+    initMultiSelect();
+
+    multiSelectLoaded = true;
+
+	}
+
+	applyFilter();
     }catch(error){
 
         console.error(error);
@@ -107,19 +115,33 @@ getSelectedFilter();
 
         }
 
-        //------------------------
-        // Teknisi
-        //------------------------
+//------------------------
+// Teknisi
+//------------------------
 
-        if(selectedTeknisi.length){
+if(selectedTeknisi.length){
 
-		if(!selectedTeknisi.includes(row.teknisi)){
+    if(!selectedTeknisi.includes(row.teknisi)){
 
-        ok=false;
+        ok = false;
 
-		}
+    }
 
-		}
+}
+
+//------------------------
+// Work Zone
+//------------------------
+
+if(selectedZone.length){
+
+    if(!selectedZone.includes(row.workzone)){
+
+        ok = false;
+
+    }
+
+}
 
         //------------------------
         // Search
@@ -163,19 +185,7 @@ ${row.teknisi}
 	document.getElementById("detailWO").innerHTML=
 	"Pilih marker atau WO.";
 }
-//------------------------
-// Work Zone
-//------------------------
 
-if(selectedZone.length){
-
-    if(!selectedZone.includes(row.workzone)){
-
-        ok = false;
-
-    }
-
-}
 //================================
 // EVENT FILTER
 //================================
@@ -299,48 +309,6 @@ document.addEventListener("click",(e)=>{
 
 });
 
-document
-.getElementById("searchTeknisi")
-.addEventListener("keyup",function(){
-
-    const key=this.value.toUpperCase();
-
-    document
-    .querySelectorAll(".chkTeknisi")
-    .forEach(chk=>{
-
-        chk.parentElement.style.display=
-
-            chk.value.toUpperCase().includes(key)
-
-            ? ""
-
-            : "none";
-
-    });
-
-});
-document
-.getElementById("searchZone")
-.addEventListener("keyup",function(){
-
-    const key=this.value.toUpperCase();
-
-    document
-    .querySelectorAll(".chkZone")
-    .forEach(chk=>{
-
-        chk.parentElement.style.display=
-
-            chk.value.toUpperCase().includes(key)
-
-            ? ""
-
-            : "none";
-
-    });
-
-});
 //====================================
 // AMBIL DATA CHECKBOX
 //====================================
@@ -382,7 +350,7 @@ function getSelectedFilter(){
         ? `📍 ${selectedZone.length} Zone Dipilih <i class="bi bi-chevron-down"></i>`
 
         : `📍 Semua Work Zone <i class="bi bi-chevron-down"></i>`;
-
+		renderFilterChip();
 }
 //====================================
 // EVENT MULTI SELECT
@@ -444,5 +412,130 @@ function initMultiSelect(){
         applyFilter();
 
     };
+	
+	//====================================
+// SEARCH TEKNISI
+//====================================
+
+document.getElementById("searchTeknisi").addEventListener("keyup",function(){
+
+    const key=this.value.toUpperCase();
+
+    document.querySelectorAll(".chkTeknisi").forEach(chk=>{
+
+        chk.parentElement.style.display=
+
+            chk.value.toUpperCase().includes(key)
+
+            ? ""
+
+            : "none";
+
+    });
+
+});
+
+//====================================
+// SEARCH WORKZONE
+//====================================
+
+document.getElementById("searchZone").addEventListener("keyup",function(){
+
+    const key=this.value.toUpperCase();
+
+    document.querySelectorAll(".chkZone").forEach(chk=>{
+
+        chk.parentElement.style.display=
+
+            chk.value.toUpperCase().includes(key)
+
+            ? ""
+
+            : "none";
+
+    });
+
+});
+
+}
+function renderFilterChip(){
+
+    const div=document.getElementById("activeFilter");
+
+    div.innerHTML="";
+
+    selectedTeknisi.forEach(n=>{
+
+        div.innerHTML+=`
+
+        <div class="filter-chip">
+
+            👷 ${n}
+
+            <span onclick="removeTeknisi('${n}')">
+
+                ×
+
+            </span>
+
+        </div>
+
+        `;
+
+    });
+
+    selectedZone.forEach(z=>{
+
+        div.innerHTML+=`
+
+        <div class="filter-chip">
+
+            📍 ${z}
+
+            <span onclick="removeZone('${z}')">
+
+                ×
+
+            </span>
+
+        </div>
+
+        `;
+
+    });
+
+}
+function removeTeknisi(nama){
+
+    document
+    .querySelectorAll(".chkTeknisi")
+    .forEach(chk=>{
+
+        if(chk.value==nama){
+
+            chk.checked=false;
+
+        }
+
+    });
+
+    applyFilter();
+
+}
+function removeZone(zone){
+
+    document
+    .querySelectorAll(".chkZone")
+    .forEach(chk=>{
+
+        if(chk.value==zone){
+
+            chk.checked=false;
+
+        }
+
+    });
+
+    applyFilter();
 
 }
