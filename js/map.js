@@ -1,21 +1,18 @@
-/******************************************************
+/*************************************************
  * PT PUTRA TIMUR JAYA
- * MONITORING TEKNISI
- * MAP ENGINE V2
- ******************************************************/
+ * MAP ENGINE V3
+ *************************************************/
 
 let map;
+let markerGroup = L.layerGroup();
 
-// Default Bandung
 const DEFAULT_CENTER = [-6.917464, 107.619123];
-const DEFAULT_ZOOM = 12;
+const DEFAULT_ZOOM = 11;
 
-// Menyimpan semua marker
-let markers = [];
-
-// ===============================
+// =========================
 // INIT MAP
-// ===============================
+// =========================
+
 function initMap() {
 
     map = L.map("map", {
@@ -30,205 +27,202 @@ function initMap() {
         }
     ).addTo(map);
 
+    markerGroup.addTo(map);
+
 }
 
-// ===============================
-// HAPUS SEMUA MARKER
-// ===============================
+// =========================
+// HAPUS MARKER
+// =========================
+
 function clearMarkers(){
 
-    markers.forEach(marker=>{
-
-        map.removeLayer(marker);
-
-    });
-
-    markers=[];
+    markerGroup.clearLayers();
 
 }
 
-// ===============================
-// ICON WARNA
-// ===============================
-function getColor(status){
+// =========================
+// WARNA STATUS
+// =========================
 
-    if(!status) return "#FFFFFF";
+function getMarkerColor(status){
 
-    status=status.toUpperCase();
+    status=(status || "").toUpperCase();
 
-    if(status.includes("COMPLETED")) return "#16a34a";
+    if(status.includes("COMPLETED")) return "#22C55E";
 
-    if(status.includes("ACTCOMP")) return "#16a34a";
+    if(status.includes("ACTCOMP")) return "#22C55E";
 
-    if(status.includes("CONFIG")) return "#2563eb";
+    if(status.includes("CONFIG")) return "#2563EB";
 
-    if(status.includes("OGP")) return "#facc15";
+    if(status.includes("OGP")) return "#FACC15";
 
-    if(status=="") return "#ffffff";
+    if(status=="") return "#FFFFFF";
 
-    return "#dc2626";
+    return "#EF4444";
 
 }
 
-// ===============================
-// ICON MARKER
-// ===============================
-function createMarker(lat,lng,data){
+// =========================
+// ICON CUSTOM
+// =========================
 
-    const color=getColor(data.status);
+function createIcon(color){
 
-    const icon=L.divIcon({
+    return L.divIcon({
 
         className:"",
 
         html:`
 
         <div style="
-
-            width:22px;
-
-            height:22px;
-
+            width:18px;
+            height:18px;
             border-radius:50%;
-
             background:${color};
-
             border:3px solid white;
-
-            box-shadow:0 0 8px rgba(0,0,0,.5);
-
+            box-shadow:0 0 8px rgba(0,0,0,.4);
         "></div>
 
         `,
 
-        iconSize:[22,22]
+        iconSize:[18,18]
 
     });
-
-    const marker=L.marker([lat,lng],{
-
-        icon
-
-    }).addTo(map);
-
-    marker.bindPopup(`
-
-        <b>${data.wo}</b>
-
-        <hr>
-
-        Teknisi :
-
-        <b>${data.teknisi}</b>
-
-        <br>
-
-        Status :
-
-        ${data.status}
-
-        <br>
-
-        ODP :
-
-        ${data.odp}
-
-        <br>
-
-        SC :
-
-        ${data.sc}
-
-        <br>
-
-        Keterangan :
-
-        ${data.keterangan}
-
-    `);
-
-    marker.on("click",()=>{
-
-        document.getElementById("detailWO").innerHTML=`
-
-            <h5>${data.wo}</h5>
-
-            <table class="table">
-
-            <tr>
-
-            <th>Teknisi</th>
-
-            <td>${data.teknisi}</td>
-
-            </tr>
-
-            <tr>
-
-            <th>Status</th>
-
-            <td>${data.status}</td>
-
-            </tr>
-
-            <tr>
-
-            <th>SC</th>
-
-            <td>${data.sc}</td>
-
-            </tr>
-
-            <tr>
-
-            <th>ODP</th>
-
-            <td>${data.odp}</td>
-
-            </tr>
-
-            <tr>
-
-            <th>Keterangan</th>
-
-            <td>${data.keterangan}</td>
-
-            </tr>
-
-            </table>
-
-        `;
-
-    });
-
-    markers.push(marker);
 
 }
 
-// ===============================
-// TEST MARKER
-// ===============================
+// =========================
+// DRAW MARKER
+// =========================
+
 function drawMarkers(){
 
-    createMarker(
+    clearMarkers();
 
-        -6.865221,
+    monitoringData.forEach((row,index)=>{
 
-        107.542118,
+        if(row.visible===false) return;
+
+        if(!row.lat || !row.lng) return;
+
+        const marker = L.marker(
+
+            [row.lat,row.lng],
+
+            {
+
+                icon:createIcon(
+
+                    getMarkerColor(row.status)
+
+                )
+
+            }
+
+        ).addTo(markerGroup);
+
+        marker.on("click",function(){
+
+            showDetail(index);
+
+        });
+
+    });
+
+}
+
+// =========================
+// DETAIL WO
+// =========================
+
+function showDetail(index){
+
+    const row=monitoringData[index];
+
+    document.getElementById("detailWO").innerHTML=`
+
+        <table class="table">
+
+        <tr>
+
+        <th>WO</th>
+
+        <td>${row.wo}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>Teknisi</th>
+
+        <td>${row.teknisi}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>Status</th>
+
+        <td>${row.status}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>SC</th>
+
+        <td>${row.sc}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>ODP</th>
+
+        <td>${row.odp}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>Tanggal</th>
+
+        <td>${row.tanggal}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>Keterangan</th>
+
+        <td>${row.keterangan}</td>
+
+        </tr>
+
+        <tr>
+
+        <th>Tikor</th>
+
+        <td>${row.lat}, ${row.lng}</td>
+
+        </tr>
+
+        </table>
+
+    `;
+
+    map.flyTo(
+
+        [row.lat,row.lng],
+
+        17,
 
         {
 
-            wo:"WO60305739",
+            animate:true,
 
-            teknisi:"PTJ ABDUL",
-
-            status:"COMPLETED",
-
-            odp:"ODP BTI FDV/091",
-
-            sc:"SC1002497379",
-
-            keterangan:"Tarik DC"
+            duration:1
 
         }
 
@@ -236,12 +230,22 @@ function drawMarkers(){
 
 }
 
-// ===============================
+// =========================
+// ZOOM KE WO
+// =========================
 
-window.onload=()=>{
+function zoomToWO(index){
 
-    initMap();
+    const row=monitoringData[index];
 
-    drawMarkers();
+    map.flyTo(
+
+        [row.lat,row.lng],
+
+        17
+
+    );
+
+    showDetail(index);
 
 }
