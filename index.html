@@ -132,27 +132,120 @@
             class="form-control"
             type="date">
 
-        <select
-            id="filterTeknisi"
-            class="form-select">
+        <!-- ================= MULTI TEKNISI ================= -->
 
-            <option value="">
+<div class="multi-select" id="teknisiBox">
 
-                Semua Teknisi
+    <button
+        type="button"
+        class="multi-btn"
+        id="btnTeknisi">
 
-            </option>
+        👷 Semua Teknisi
 
-        </select>
+        <i class="bi bi-chevron-down"></i>
 
-        <select
-		id="filterWorkZone"
-		class="form-select">
+    </button>
 
-		<option value="">
-			Semua Work Zone
-		</option>
+    <div
+        class="multi-dropdown"
+        id="dropdownTeknisi">
 
-		</select>
+        <input
+            type="text"
+            id="searchTeknisi"
+            class="form-control"
+            placeholder="Cari Teknisi...">
+
+        <div class="multi-action">
+
+            <button
+                type="button"
+                id="checkAllTeknisi"
+                class="btn btn-sm btn-primary">
+
+                Semua
+
+            </button>
+
+            <button
+                type="button"
+                id="clearTeknisi"
+                class="btn btn-sm btn-outline-secondary">
+
+                Clear
+
+            </button>
+
+        </div>
+
+        <div
+            id="listTeknisi"
+            class="multi-list">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MULTI WORKZONE ================= -->
+
+<div class="multi-select" id="zoneBox">
+
+    <button
+        type="button"
+        class="multi-btn"
+        id="btnZone">
+
+        📍 Semua Work Zone
+
+        <i class="bi bi-chevron-down"></i>
+
+    </button>
+
+    <div
+        class="multi-dropdown"
+        id="dropdownZone">
+
+        <input
+            type="text"
+            id="searchZone"
+            class="form-control"
+            placeholder="Cari Work Zone...">
+
+        <div class="multi-action">
+
+            <button
+                type="button"
+                id="checkAllZone"
+                class="btn btn-sm btn-primary">
+
+                Semua
+
+            </button>
+
+            <button
+                type="button"
+                id="clearZone"
+                class="btn btn-sm btn-outline-secondary">
+
+                Clear
+
+            </button>
+
+        </div>
+
+        <div
+            id="listZone"
+            class="multi-list">
+
+			</div>
+
+		</div>
+
+	</div>
 
         <input
             id="searchWO"
