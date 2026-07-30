@@ -671,3 +671,46 @@ body{
     background:#DBEAFE;
 
 }
+/*==================================
+ACTIVE FILTER
+==================================*/
+
+.active-filter{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    padding:0 15px 10px;
+
+}
+
+.filter-chip{
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:13px;
+
+}
+
+.filter-chip span{
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
