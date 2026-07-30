@@ -8,7 +8,8 @@ const API_URL =
 "https://script.google.com/macros/s/AKfycbzp1pGPPjLr26534rC7LAy1WgDIAONBXUm5Wdysz8Ddqtu2GhcBbi0C0PLnyWJUQ20x/exec";
 
 // Data Global
-let monitoringData = [];
+let monitoringData = [];   // Semua data dari Apps Script
+let filteredData = [];     // Data hasil filter
 
 // ===============================
 // LOAD DATA
@@ -33,16 +34,17 @@ async function loadMonitoring(){
         if(!response.ok){
             throw new Error("HTTP " + response.status);
         }
+		monitoringData = await response.json();
 
-        monitoringData = await response.json();
+		filteredData = [...monitoringData];
 
-        console.log("Monitoring Data :", monitoringData);
+		console.log(filteredData);
 
-        dashboardSummary();
+		dashboardSummary();
 
-        buildWOList();
+		buildWOList();
 
-        drawMarkers();
+		drawMarkers();
 
     }
     catch(error){
