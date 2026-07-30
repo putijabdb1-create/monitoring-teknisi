@@ -1,7 +1,7 @@
-/* ======================================================
+/* =======================================================
    PT PUTRA TIMUR JAYA
-   Monitoring Teknisi V2
-====================================================== */
+   MONITORING TEKNISI V3
+======================================================= */
 
 *{
     margin:0;
@@ -9,193 +9,36 @@
     box-sizing:border-box;
 }
 
-body{
-    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
-    background:#eef2f7;
+html,body{
+    width:100%;
+    height:100%;
     overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    background:#eef2f6;
 }
 
-/* ==========================
-    LAYOUT
-========================== */
+body{
+    color:#222;
+}
 
-.wrapper{
-    display:flex;
+.app{
     width:100%;
     height:100vh;
-}
-
-/* ==========================
-    SIDEBAR
-========================== */
-
-.sidebar{
-
-    width:290px;
-
-    background:#0f172a;
-
-    color:white;
-
-    padding:25px;
-
-    overflow:auto;
-
-}
-
-.logo{
-
     display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    margin-bottom:25px;
-
-}
-
-.logo-circle{
-
-    width:55px;
-
-    height:55px;
-
-    border-radius:50%;
-
-    background:#2563eb;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:28px;
-
-}
-
-.logo h5{
-
-    margin:0;
-
-    font-size:17px;
-
-}
-
-.logo small{
-
-    color:#94a3b8;
-
-}
-
-.menu-title{
-
-    margin:20px 0;
-
-    color:#94a3b8;
-
-    font-size:13px;
-
-    text-transform:uppercase;
-
-    letter-spacing:2px;
-
-}
-
-.card-status{
-
-    background:#1e293b;
-
-    padding:18px;
-
-    border-radius:12px;
-
-    margin-bottom:15px;
-
-    transition:.3s;
-
-}
-
-.card-status:hover{
-
-    transform:translateY(-3px);
-
-}
-
-.card-status span{
-
-    color:#cbd5e1;
-
-    font-size:13px;
-
-}
-
-.card-status h2{
-
-    margin-top:8px;
-
-    font-size:32px;
-
-    font-weight:bold;
-
-}
-
-.green{
-
-    border-left:6px solid #22c55e;
-
-}
-
-.blue{
-
-    border-left:6px solid #3b82f6;
-
-}
-
-.yellow{
-
-    border-left:6px solid #facc15;
-
-}
-
-.red{
-
-    border-left:6px solid #ef4444;
-
-}
-
-.dark{
-
-    border-left:6px solid #64748b;
-
-}
-
-/* ==========================
-    CONTENT
-========================== */
-
-.content{
-
-    flex:1;
-
-    display:flex;
-
     flex-direction:column;
-
-    overflow:hidden;
-
 }
 
-/* ==========================
-    TOPBAR
-========================== */
+/* =======================================================
+   TOPBAR
+======================================================= */
 
 .topbar{
 
-    background:white;
+    height:70px;
 
-    height:75px;
+    background:#0F172A;
+
+    color:white;
 
     display:flex;
 
@@ -205,110 +48,410 @@ body{
 
     padding:0 25px;
 
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
 
 }
 
-.topbar h3{
+.logo-area{
 
-    margin:0;
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.logo-circle{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:#2563EB;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
 
     font-size:22px;
 
 }
 
-.topbar small{
+.logo-area h3{
 
-    color:#64748b;
+    margin:0;
 
-}
-
-/* ==========================
-    FILTER
-========================== */
-
-.filter-area{
-
-    padding:20px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
+    font-size:20px;
 
 }
 
-/* ==========================
-    MAP
-========================== */
+.logo-area small{
 
-.map-container{
-
-    flex:1;
-
-    position:relative;
+    color:#CBD5E1;
 
 }
 
-#map{
+.live{
 
-    width:100%;
+    display:flex;
 
-    height:100%;
+    gap:12px;
 
-}
+    align-items:center;
 
-/* ==========================
-    DETAIL
-========================== */
-
-.detail{
-
-    height:180px;
-
-    background:white;
-
-    border-top:1px solid #ddd;
-
-    padding:20px;
-
-    overflow:auto;
+    font-size:14px;
 
 }
 
-.detail h5{
+/* =======================================================
+   CARD
+======================================================= */
 
-    margin-bottom:15px;
+.dashboard-card{
 
-}
+    display:grid;
 
-/* ==========================
-    RESPONSIVE
-========================== */
+    grid-template-columns:repeat(6,1fr);
 
-@media(max-width:991px){
-
-.sidebar{
-
-    width:100px;
+    gap:15px;
 
     padding:15px;
 
 }
 
-.logo h5,
-.logo small,
-.menu-title,
-.card-status span{
+.card-item{
 
-    display:none;
+    background:white;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    transition:.25s;
 
 }
 
-.card-status h2{
+.card-item:hover{
 
-    font-size:20px;
+    transform:translateY(-3px);
 
-    text-align:center;
+}
+
+.card-item small{
+
+    color:#64748B;
+
+}
+
+.card-item h3{
+
+    margin-top:10px;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+/* =======================================================
+   FILTER
+======================================================= */
+
+.filter{
+
+    display:grid;
+
+    grid-template-columns:
+    170px
+    220px
+    180px
+    1fr
+    130px;
+
+    gap:10px;
+
+    padding:0 15px 15px;
+
+}
+
+/* =======================================================
+   WORKSPACE
+======================================================= */
+
+.workspace{
+
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:
+
+        320px
+
+        1fr
+
+        330px;
+
+    gap:15px;
+
+    padding:0 15px 15px;
+
+    overflow:hidden;
+
+}
+
+/* =======================================================
+   PANEL
+======================================================= */
+
+.left-panel,
+.center-panel,
+.right-panel{
+
+    background:white;
+
+    border-radius:14px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    overflow:hidden;
+
+}
+
+/* =======================================================
+   TITLE
+======================================================= */
+
+.panel-title{
+
+    background:#F8FAFC;
+
+    border-bottom:1px solid #E2E8F0;
+
+    padding:15px 18px;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+/* =======================================================
+   WO LIST
+======================================================= */
+
+#woList{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:12px;
+
+}
+
+.wo-card{
+
+    background:#fff;
+
+    border:1px solid #E2E8F0;
+
+    border-left:5px solid #2563EB;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    margin-bottom:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.wo-card:hover{
+
+    background:#EFF6FF;
+
+    transform:translateY(-2px);
+
+}
+
+.wo-title{
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
+
+.wo-tech{
+
+    color:#64748B;
+
+    margin-top:5px;
+
+    font-size:13px;
+
+}
+
+.wo-status{
+
+    margin-top:8px;
+
+}
+
+/* =======================================================
+   MAP
+======================================================= */
+
+#map{
+
+    flex:1;
+
+    width:100%;
+
+}
+
+/* =======================================================
+   DETAIL
+======================================================= */
+
+#detailWO{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:18px;
+
+    font-size:14px;
+
+}
+
+#detailWO table{
+
+    width:100%;
+
+}
+
+#detailWO th{
+
+    width:110px;
+
+    color:#64748B;
+
+    text-align:left;
+
+    padding:8px 0;
+
+}
+
+#detailWO td{
+
+    padding:8px 0;
+
+}
+
+/* =======================================================
+   BADGE
+======================================================= */
+
+.badge-status{
+
+    color:white;
+
+    padding:5px 10px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+}
+
+/* =======================================================
+   SCROLLBAR
+======================================================= */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#CBD5E1;
+
+    border-radius:20px;
+
+}
+
+/* =======================================================
+   MOBILE
+======================================================= */
+
+@media(max-width:1200px){
+
+.dashboard-card{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+
+.workspace{
+
+    grid-template-columns:1fr;
+
+}
+
+.left-panel{
+
+    height:300px;
+
+}
+
+.center-panel{
+
+    height:500px;
+
+}
+
+.right-panel{
+
+    height:320px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.filter{
+
+    grid-template-columns:1fr;
+
+}
+
+.dashboard-card{
+
+    grid-template-columns:repeat(2,1fr);
 
 }
 
@@ -318,51 +461,10 @@ body{
 
 }
 
-.topbar h3{
+.logo-area h3{
 
-    font-size:18px;
-
-}
-
-.detail{
-
-    height:200px;
+    font-size:16px;
 
 }
-
-}
-.wo-item{
-
-background:white;
-
-border-radius:8px;
-
-padding:10px;
-
-margin-bottom:10px;
-
-border:1px solid #ddd;
-
-}
-
-.wo-item:hover{
-
-background:#f5f5f5;
-
-}
-
-.wo-teknisi{
-
-margin-top:6px;
-
-font-size:13px;
-
-color:#666;
-
-}
-
-.wo-status{
-
-margin-top:8px;
 
 }
