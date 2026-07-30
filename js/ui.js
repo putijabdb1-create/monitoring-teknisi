@@ -44,46 +44,121 @@ function dashboardSummary(){
 }
 
 //=======================================
-// LIST WO
+// LIST TEKNISI (GROUP BY TEKNISI)
 //=======================================
 
 function buildWOList(){
 
     const list = document.getElementById("woList");
 
-    let html = "";
+    let teknisiGroup = {};
 
     monitoringData.forEach((row,index)=>{
 
-        html += `
-        <div class="wo-card" onclick="zoomToWO(${index})">
+        if(!teknisiGroup[row.teknisi]){
 
-            <label>
+            teknisiGroup[row.teknisi]=[];
 
-                <input
-                    type="checkbox"
-                    checked
-                    onclick="event.stopPropagation();toggleWO(${index},this.checked)">
+        }
 
-                <span class="wo-title">${row.wo}</span>
+        row.index=index;
 
-            </label>
+        teknisiGroup[row.teknisi].push(row);
 
-            <div class="wo-tech">
-                👷 ${row.teknisi}
+    });
+
+    let html="";
+
+    Object.keys(teknisiGroup).forEach((namaTeknisi,i)=>{
+
+        const dataWO=teknisiGroup[namaTeknisi];
+
+        html+=`
+
+        <div class="wo-card">
+
+            <div
+                style="
+                cursor:pointer;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                "
+                onclick="toggleGroup(${i})">
+
+                <div>
+
+                    <div class="wo-title">
+
+                        👷 ${namaTeknisi}
+
+                    </div>
+
+                    <small>
+
+                        ${dataWO.length} WO
+
+                    </small>
+
+                </div>
+
+                <div>
+
+                    ▼
+
+                </div>
+
             </div>
 
-            <div class="wo-status">
+            <div id="group${i}" style="margin-top:10px;">
+
+        `;
+
+        dataWO.forEach((row)=>{
+
+            html+=`
+
+            <div
+                style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin:6px 0;
+                ">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        checked
+                        onclick="event.stopPropagation();toggleWO(${row.index},this.checked)">
+
+                    ${row.wo}
+
+                </label>
+
                 ${statusBadge(row.status)}
+
+            </div>
+
+            `;
+
+        });
+
+        html+=`
+
             </div>
 
         </div>
+
         `;
 
     });
 
-    list.innerHTML = html;
+    list.innerHTML=html;
+
 }
+
 //=======================================
 // WARNA STATUS
 //=======================================
@@ -129,5 +204,24 @@ function toggleWO(index,checked){
     monitoringData[index].visible=checked;
 
     drawMarkers();
+
+}
+//=======================================
+// EXPAND / COLLAPSE
+//=======================================
+
+function toggleGroup(id){
+
+    const div=document.getElementById("group"+id);
+
+    if(div.style.display==="none"){
+
+        div.style.display="block";
+
+    }else{
+
+        div.style.display="none";
+
+    }
 
 }
