@@ -71,7 +71,7 @@ function drawMarkers(){
 
     clearMarkers();
 
-    monitoringData.forEach((row,index)=>{
+    filteredData.forEach((row,index)=>{
 
         if(row.visible===false) return;
 
