@@ -7,6 +7,5 @@ window.onload = function(){
     initMap();
 
     loadMonitoring();
-    
-    applyFilter();
-}
+
+};
