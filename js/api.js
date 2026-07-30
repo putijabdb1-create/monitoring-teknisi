@@ -39,14 +39,11 @@ async function loadMonitoring(){
 
         filteredData = [...monitoringData];
 
-        // isi dropdown filter
         loadFilter();
 
-        // jalankan filter pertama kali
         applyFilter();
 
-    }
-    catch(error){
+    }catch(error){
 
         console.error(error);
 
@@ -120,10 +117,9 @@ function applyFilter(){
 
     const zone=document.getElementById("filterWorkZone").value;
 
-    const keyword=document
-        .getElementById("searchWO")
-        .value
-        .toUpperCase();
+		const keyword = (
+		document.getElementById("searchWO")?.value || ""
+		).toUpperCase();
 
     filteredData=monitoringData.filter(row=>{
 
