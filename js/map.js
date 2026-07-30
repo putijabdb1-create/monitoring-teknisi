@@ -208,7 +208,7 @@ function createMarker(lat,lng,data){
 // ===============================
 // TEST MARKER
 // ===============================
-function demoMarker(){
+function drawMarkers(){
 
     createMarker(
 
@@ -242,6 +242,6 @@ window.onload=()=>{
 
     initMap();
 
-    demoMarker();
+    drawMarkers();
 
 }
