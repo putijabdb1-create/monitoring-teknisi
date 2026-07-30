@@ -64,44 +64,6 @@ function getMarkerColor(status){
 }
 
 // =========================
-// ICON CUSTOM
-// =========================
-
-function createIcon(color){
-
-    return L.divIcon({
-
-        className:"",
-
- html:`
-
-<div class="tech-marker">
-
-    <span class="helmet">
-
-        <i class="bi bi-person-workspace"></i>
-
-    </span>
-
-    <span
-        class="name"
-        style="color:${statusColor(row.status)}">
-
-        ${shortName(row.teknisi)}
-
-    </span>
-
-</div>
-
-`,
-
-        iconSize:[18,18]
-
-    });
-
-}
-
-// =========================
 // DRAW MARKER
 // =========================
 
@@ -123,15 +85,11 @@ html:`
 
 <div class="tech-marker">
 
-    <span style="font-size:16px">👷</span>
+    <i class="bi bi-person-workspace helmet"></i>
 
     <span
-        style="
-            color:${statusColor(row.status)};
-            text-shadow:
-                1px 1px 2px white,
-                -1px -1px 2px white;
-        ">
+        class="name"
+        style="color:${statusColor(row.status)}">
 
         ${shortName(row.teknisi)}
 
@@ -141,10 +99,9 @@ html:`
 
 `,
 
-        iconSize:[80,40],
+		iconSize:[70,20],
 
-        iconAnchor:[40,20]
-
+		iconAnchor:[10,10]
     });
 
  const marker = L.marker(
@@ -156,9 +113,15 @@ html:`
 
 marker.addTo(markerGroup);
 
-        });
+marker.on("click", function () {
 
-}
+    showDetail(index);
+
+});
+
+    });   // <-- penutup forEach
+
+}         // <-- penutup drawMarkers
 
 // =========================
 // DETAIL WO
@@ -297,9 +260,11 @@ function shortName(nama){
 
     nama=nama.replace("PTJ ","");
 
-    nama=nama.replace("&","");
+    nama=nama.split("&")[0];
 
-    return nama;
+    nama=nama.trim();
+
+    return nama.split(" ")[0];
 
 }
 function statusColor(status){
