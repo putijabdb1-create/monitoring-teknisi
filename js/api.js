@@ -46,7 +46,7 @@ async function loadMonitoring(){
         filteredData = [...monitoringData];
 
         loadFilter();
-
+		initMultiSelect();
         applyFilter();
 
     }catch(error){
@@ -70,58 +70,13 @@ function loadFilter(){
 
 }
 
-    //==========================
-    // TEKNISI
-    //==========================
-
-    const listTeknisi=[
-        ...new Set(
-            monitoringData.map(x=>x.teknisi)
-        )
-    ].sort();
-
-    listTeknisi.forEach(n=>{
-
-        teknisi.innerHTML+=`
-        <option value="${n}">
-            ${n}
-        </option>
-        `;
-
-    });
-
-    //==========================
-    // WORK ZONE
-    //==========================
-
-    const listZone=[
-        ...new Set(
-            monitoringData.map(x=>x.workzone)
-        )
-    ].sort();
-
-    listZone.forEach(z=>{
-
-        workzone.innerHTML+=`
-        <option value="${z}">
-            ${z}
-        </option>
-        `;
-
-    });
-
-}
 //=========================================
 // APPLY FILTER
 //=========================================
 
 function applyFilter(){
-
+getSelectedFilter();
     const tanggal=document.getElementById("filterTanggal").value;
-
-    const teknisi=document.getElementById("filterTeknisi").value;
-
-    const zone=document.getElementById("filterWorkZone").value;
 
 		const keyword = (
 		document.getElementById("searchWO")?.value || ""
@@ -156,29 +111,15 @@ function applyFilter(){
         // Teknisi
         //------------------------
 
-        if(teknisi){
+        if(selectedTeknisi.length){
 
-            if(row.teknisi!=teknisi){
+		if(!selectedTeknisi.includes(row.teknisi)){
 
-                ok=false;
+        ok=false;
 
-            }
+		}
 
-        }
-
-        //------------------------
-        // Work Zone
-        //------------------------
-
-        if(zone){
-
-            if(row.workzone!=zone){
-
-                ok=false;
-
-            }
-
-        }
+		}
 
         //------------------------
         // Search
@@ -222,6 +163,19 @@ ${row.teknisi}
 	document.getElementById("detailWO").innerHTML=
 	"Pilih marker atau WO.";
 }
+//------------------------
+// Work Zone
+//------------------------
+
+if(selectedZone.length){
+
+    if(!selectedZone.includes(row.workzone)){
+
+        ok = false;
+
+    }
+
+}
 //================================
 // EVENT FILTER
 //================================
@@ -230,14 +184,6 @@ window.addEventListener("DOMContentLoaded",()=>{
 
     document
     .getElementById("filterTanggal")
-    .addEventListener("change",applyFilter);
-
-    document
-    .getElementById("filterWorkZone")
-    .addEventListener("change",applyFilter);
-
-    document
-    .getElementById("filterTeknisi")
     .addEventListener("change",applyFilter);
 
     document
@@ -395,3 +341,108 @@ document
     });
 
 });
+//====================================
+// AMBIL DATA CHECKBOX
+//====================================
+
+function getSelectedFilter(){
+
+    selectedTeknisi = [];
+
+    document
+    .querySelectorAll(".chkTeknisi:checked")
+    .forEach(chk=>{
+
+        selectedTeknisi.push(chk.value);
+
+    });
+
+    selectedZone = [];
+
+    document
+    .querySelectorAll(".chkZone:checked")
+    .forEach(chk=>{
+
+        selectedZone.push(chk.value);
+
+    });
+
+    document.getElementById("btnTeknisi").innerHTML =
+
+        selectedTeknisi.length
+
+        ? `👷 ${selectedTeknisi.length} Teknisi Dipilih <i class="bi bi-chevron-down"></i>`
+
+        : `👷 Semua Teknisi <i class="bi bi-chevron-down"></i>`;
+
+    document.getElementById("btnZone").innerHTML =
+
+        selectedZone.length
+
+        ? `📍 ${selectedZone.length} Zone Dipilih <i class="bi bi-chevron-down"></i>`
+
+        : `📍 Semua Work Zone <i class="bi bi-chevron-down"></i>`;
+
+}
+//====================================
+// EVENT MULTI SELECT
+//====================================
+
+function initMultiSelect(){
+
+    // Event checkbox
+    document.addEventListener("change",(e)=>{
+
+        if(e.target.matches(".chkTeknisi,.chkZone")){
+
+            applyFilter();
+
+        }
+
+    });
+
+    // Pilih semua Teknisi
+    document.getElementById("checkAllTeknisi").onclick = function(){
+
+        document
+        .querySelectorAll(".chkTeknisi")
+        .forEach(chk => chk.checked = true);
+
+        applyFilter();
+
+    };
+
+    // Hapus semua Teknisi
+    document.getElementById("clearTeknisi").onclick = function(){
+
+        document
+        .querySelectorAll(".chkTeknisi")
+        .forEach(chk => chk.checked = false);
+
+        applyFilter();
+
+    };
+
+    // Pilih semua Work Zone
+    document.getElementById("checkAllZone").onclick = function(){
+
+        document
+        .querySelectorAll(".chkZone")
+        .forEach(chk => chk.checked = true);
+
+        applyFilter();
+
+    };
+
+    // Hapus semua Work Zone
+    document.getElementById("clearZone").onclick = function(){
+
+        document
+        .querySelectorAll(".chkZone")
+        .forEach(chk => chk.checked = false);
+
+        applyFilter();
+
+    };
+
+}
