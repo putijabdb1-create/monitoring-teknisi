@@ -11,6 +11,12 @@ const API_URL =
 let monitoringData = [];   // Semua data dari Apps Script
 let filteredData = [];     // Data hasil filter
 
+//====================================
+// MULTI SELECT
+//====================================
+
+let selectedTeknisi = [];
+let selectedZone = [];
 // ===============================
 // LOAD DATA
 // ===============================
@@ -58,11 +64,11 @@ async function loadMonitoring(){
 
 function loadFilter(){
 
-    const teknisi=document.getElementById("filterTeknisi");
-    const workzone=document.getElementById("filterWorkZone");
+    buildTeknisiFilter();
 
-    teknisi.innerHTML='<option value="">Semua Teknisi</option>';
-    workzone.innerHTML='<option value="">Semua Work Zone</option>';
+    buildZoneFilter();
+
+}
 
     //==========================
     // TEKNISI
@@ -237,5 +243,155 @@ window.addEventListener("DOMContentLoaded",()=>{
     document
     .getElementById("searchWO")
     .addEventListener("keyup",applyFilter);
+
+});
+//====================================
+// TEKNISI FILTER
+//====================================
+
+function buildTeknisiFilter(){
+
+    const list = document.getElementById("listTeknisi");
+
+    list.innerHTML="";
+
+    const teknisi=[
+        ...new Set(
+            monitoringData.map(x=>x.teknisi)
+        )
+    ].sort();
+
+    teknisi.forEach(n=>{
+
+        list.innerHTML+=`
+
+        <div class="multi-item">
+
+            <input
+                type="checkbox"
+                value="${n}"
+                class="chkTeknisi">
+
+            <label>${n}</label>
+
+        </div>
+
+        `;
+
+    });
+
+}
+//====================================
+// WORKZONE FILTER
+//====================================
+
+function buildZoneFilter(){
+
+    const list=document.getElementById("listZone");
+
+    list.innerHTML="";
+
+    const zone=[
+        ...new Set(
+            monitoringData.map(x=>x.workzone)
+        )
+    ].sort();
+
+    zone.forEach(z=>{
+
+        list.innerHTML+=`
+
+        <div class="multi-item">
+
+            <input
+                type="checkbox"
+                value="${z}"
+                class="chkZone">
+
+            <label>${z}</label>
+
+        </div>
+
+        `;
+
+    });
+
+}
+//====================================
+// OPEN CLOSE
+//====================================
+
+document.addEventListener("click",(e)=>{
+
+    if(e.target.closest("#btnTeknisi")){
+
+        document
+        .getElementById("dropdownTeknisi")
+        .classList.toggle("show");
+
+    }
+
+    else if(e.target.closest("#btnZone")){
+
+        document
+        .getElementById("dropdownZone")
+        .classList.toggle("show");
+
+    }
+
+    else{
+
+        document
+        .getElementById("dropdownTeknisi")
+        .classList.remove("show");
+
+        document
+        .getElementById("dropdownZone")
+        .classList.remove("show");
+
+    }
+
+});
+
+document
+.getElementById("searchTeknisi")
+.addEventListener("keyup",function(){
+
+    const key=this.value.toUpperCase();
+
+    document
+    .querySelectorAll(".chkTeknisi")
+    .forEach(chk=>{
+
+        chk.parentElement.style.display=
+
+            chk.value.toUpperCase().includes(key)
+
+            ? ""
+
+            : "none";
+
+    });
+
+});
+document
+.getElementById("searchZone")
+.addEventListener("keyup",function(){
+
+    const key=this.value.toUpperCase();
+
+    document
+    .querySelectorAll(".chkZone")
+    .forEach(chk=>{
+
+        chk.parentElement.style.display=
+
+            chk.value.toUpperCase().includes(key)
+
+            ? ""
+
+            : "none";
+
+    });
 
 });
