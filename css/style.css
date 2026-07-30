@@ -510,3 +510,164 @@ body{
     font-weight:700;
 
 }
+/*====================================================
+  MULTI SELECT V3.1
+====================================================*/
+
+.multi-select{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+.multi-btn{
+
+    width:100%;
+
+    height:38px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:8px;
+
+    background:#fff;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:14px;
+
+}
+
+.multi-btn:hover{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.08);
+
+}
+
+.multi-dropdown{
+
+    position:absolute;
+
+    top:45px;
+
+    left:0;
+
+    width:100%;
+
+    background:white;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+    display:none;
+
+    z-index:9999;
+
+    overflow:hidden;
+
+}
+
+.multi-dropdown.show{
+
+    display:block;
+
+}
+
+.multi-dropdown input{
+
+    margin:10px;
+
+    width:calc(100% - 20px);
+
+}
+
+.multi-action{
+
+    display:flex;
+
+    gap:8px;
+
+    padding:0 10px 10px;
+
+}
+
+.multi-action button{
+
+    flex:1;
+
+}
+
+.multi-list{
+
+    max-height:260px;
+
+    overflow:auto;
+
+    border-top:1px solid #E5E7EB;
+
+}
+
+.multi-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:9px 12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    font-size:14px;
+
+}
+
+.multi-item:hover{
+
+    background:#EFF6FF;
+
+}
+
+.multi-item input{
+
+    width:16px;
+
+    height:16px;
+
+}
+
+.multi-item label{
+
+    cursor:pointer;
+
+    flex:1;
+
+    margin:0;
+
+}
+
+.multi-selected{
+
+    background:#DBEAFE;
+
+}
