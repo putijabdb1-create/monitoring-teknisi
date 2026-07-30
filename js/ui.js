@@ -61,32 +61,32 @@ function buildWOList(){
 
         html+=`
 
-        <div class="wo-item">
+        <div class="wo-card" onclick="zoomToWO(${index})">
 
-            <label>
+    <label>
 
-            <input
-                type="checkbox"
-                checked
-                onchange="toggleWO(${index},this.checked)">
+        <input
+            type="checkbox"
+            checked
+            onclick="event.stopPropagation();toggleWO(${index},this.checked)">
 
-            <b>${row.wo}</b>
+        <span class="wo-title">${row.wo}</span>
 
-            </label>
+    </label>
 
-            <div class="wo-teknisi">
+    <div class="wo-tech">
 
-                ${row.teknisi}
+        👷 ${row.teknisi}
 
-            </div>
+    </div>
 
-            <div class="wo-status">
+    <div class="wo-status">
 
-                ${statusBadge(row.status)}
+        ${statusBadge(row.status)}
 
-            </div>
+    </div>
 
-        </div>
+</div>
 
         `;
 
