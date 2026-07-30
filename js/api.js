@@ -30,9 +30,17 @@ async function loadMonitoring() {
         document.getElementById("detailWO").innerHTML =
         "Mengambil data dari Google Sheet...";
 
-        const response = await fetch(
-            API_URL + "?action=getData"
-        );
+    const response = await fetch(
+    API_URL + "?action=getData",
+        {
+            method: "GET",
+            redirect: "follow"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+    }
 
         monitoringData = await response.json();
 
@@ -50,7 +58,9 @@ async function loadMonitoring() {
 
         console.error(err);
 
-        alert("Gagal mengambil data dari Apps Script");
+        alert(err.message);
+
+        console.log(err);
 
     }
 
