@@ -106,29 +106,38 @@ function drawMarkers(){
 
         if(!row.lat || !row.lng) return;
 
-        const marker = L.marker(
+       const icon=L.divIcon({
 
-            [row.lat,row.lng],
+        className:"",
 
-            {
+        html:`
 
-                icon:createIcon(
+        <div class="tech-marker ${markerColor(row.status)}">
 
-                    getMarkerColor(row.status)
+            👷<br>
 
-                )
+            ${shortName(row.teknisi)}
 
-            }
+        </div>
 
-        ).addTo(markerGroup);
+        `,
 
-        marker.on("click",function(){
+        iconSize:[80,40],
 
-            showDetail(index);
-
-        });
+        iconAnchor:[40,20]
 
     });
+
+ const marker = L.marker(
+    [row.lat,row.lng],
+    {
+        icon:icon
+    }
+);
+
+marker.addTo(markerGroup);
+
+        });
 
 }
 
@@ -247,5 +256,30 @@ function zoomToWO(index){
     );
 
     showDetail(index);
+
+}
+function markerColor(status){
+
+    status=(status||"").toUpperCase();
+
+    if(status.includes("ACTCOMP")) return "green";
+
+    if(status.includes("COMPLETED")) return "green";
+
+    if(status.includes("CONFIG")) return "blue";
+
+    if(status.includes("OGP")) return "yellow";
+
+    return "red";
+
+}
+
+function shortName(nama){
+
+    nama=nama.replace("PTJ ","");
+
+    nama=nama.replace("&","");
+
+    return nama;
 
 }
