@@ -496,19 +496,51 @@ body{
 
 }
 
+/* ===========================
+   MARKER TEKNISI V4
+=========================== */
+
 .tech-marker{
 
     display:flex;
     align-items:center;
+
     gap:4px;
 
     background:transparent;
+
     border:none;
+
     box-shadow:none;
 
+    white-space:nowrap;
+
+    font-family:Arial,sans-serif;
+
     font-size:11px;
+
     font-weight:700;
 
-    white-space:nowrap;
+    pointer-events:none;
+
+}
+
+.tech-marker .helmet{
+
+    font-size:16px;
+
+    color:#111;
+
+    text-shadow:
+        0 0 2px #fff,
+        0 0 4px #fff;
+
+}
+
+.tech-marker .name{
+
+    text-shadow:
+        0 0 2px white,
+        0 0 4px white;
 
 }
