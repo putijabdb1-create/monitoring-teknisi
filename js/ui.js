@@ -1,230 +1,146 @@
 /*************************************************
  * PT PUTRA TIMUR JAYA
- * UI ENGINE V4
- * Group By Teknisi
+ * UI ENGINE V2
  *************************************************/
 
-let groupedData = {};
-let selectedTechnician = null;
 
-//=====================================
-// DASHBOARD
-//=====================================
+//=======================================
+// HITUNG DASHBOARD
+//=======================================
 
 function dashboardSummary(){
 
     document.getElementById("totalWO").innerHTML = monitoringData.length;
 
-    let completed = 0;
-    let config = 0;
-    let ogp = 0;
-    let kendala = 0;
+    let completed=0;
+    let config=0;
+    let ogp=0;
+    let kendala=0;
 
-    const teknisi = new Set();
+    const teknisi=new Set();
 
     monitoringData.forEach(row=>{
 
         teknisi.add(row.teknisi);
 
-        const status=(row.status||"").toUpperCase();
+        let status=(row.status || "").toUpperCase();
 
-        if(status.includes("COMPLETED") || status.includes("ACTCOMP")){
-
+        if(status.includes("COMPLETED") || status.includes("ACTCOMP"))
             completed++;
 
-        }else if(status.includes("CONFIG")){
-
+        else if(status.includes("CONFIG"))
             config++;
 
-        }else if(status.includes("OGP")){
-
+        else if(status.includes("OGP"))
             ogp++;
 
-        }else{
-
+        else
             kendala++;
 
-        }
-
     });
 
-    document.getElementById("completed").innerHTML = completed;
-    document.getElementById("config").innerHTML = config;
-    document.getElementById("ogp").innerHTML = ogp;
-    document.getElementById("kendala").innerHTML = kendala;
-    document.getElementById("teknisiAktif").innerHTML = teknisi.size;
+    document.getElementById("completed").innerHTML=completed;
+    document.getElementById("config").innerHTML=config;
+    document.getElementById("ogp").innerHTML=ogp;
+    document.getElementById("kendala").innerHTML=kendala;
+    document.getElementById("teknisiAktif").innerHTML=teknisi.size;
 
 }
-//=====================================
-// GROUP TEKNISI
-//=====================================
 
-function groupTechnicians(){
 
-    groupedData={};
 
-    monitoringData.forEach((row,index)=>{
-
-        if(!groupedData[row.teknisi]){
-
-            groupedData[row.teknisi]={
-
-                nama:row.teknisi,
-
-                wo:[],
-
-                visible:true
-
-            };
-
-        }
-
-        row.index=index;
-
-        groupedData[row.teknisi].wo.push(row);
-
-    });
-
-}
-//=====================================
-// BUILD LIST TEKNISI
-//=====================================
+//=======================================
+// LIST WO
+//=======================================
 
 function buildWOList(){
 
-    groupTechnicians();
-
-    const list=document.getElementById("woList");
-
-    let html="";
-
-    Object.values(groupedData).forEach(tech=>{
-
-        html+=buildTechnicianCard(tech);
-
-    });
-
-    list.innerHTML=html;
-
-}
-//=====================================
-// CARD TEKNISI
-//=====================================
-
-function buildTechnicianCard(tech){
+    const list = document.getElementById("woList");
 
     let html = "";
 
-    html += `
-
-    <div class="tech-card">
-
-        <div class="tech-header"
-             onclick="toggleTechnician('${tech.nama}')">
-
-            <div>
-
-                <div class="tech-name">
-
-                    👷 ${tech.nama}
-
-                </div>
-
-                <div class="tech-count">
-
-                    ${tech.wo.length} WO
-
-                </div>
-
-            </div>
-
-            <div>
-
-                ▼
-
-            </div>
-
-        </div>
-
-        <div
-            id="tech-${slugify(tech.nama)}"
-            class="tech-body">
-
-    `;
-
-    tech.wo.forEach((wo)=>{
+    monitoringData.forEach((row,index)=>{
 
         html += `
+        <div class="wo-card" onclick="zoomToWO(${index})">
 
-        <div
-            class="wo-row"
-            onclick="zoomToWO(${wo.index})">
+            <label>
 
-            <input
-                type="checkbox"
-                checked
-                onclick="event.stopPropagation();toggleWO(${wo.index},this.checked)">
+                <input
+                    type="checkbox"
+                    checked
+                    onclick="event.stopPropagation();toggleWO(${index},this.checked)">
 
-            <span>
+                <span class="wo-title">${row.wo}</span>
 
-                ${wo.wo}
+            </label>
 
-            </span>
+            <div class="wo-tech">
+                👷 ${row.teknisi}
+            </div>
 
-            ${statusBadge(wo.status)}
+            <div class="wo-status">
+                ${statusBadge(row.status)}
+            </div>
 
         </div>
-
         `;
 
     });
 
-    html += `
+    list.innerHTML = html;
 
-        </div>
+}
 
-    </div>
+
+
+//=======================================
+// WARNA STATUS
+//=======================================
+
+function statusBadge(status){
+
+    status=(status || "").toUpperCase();
+
+    let color="#dc2626";
+
+    if(status.includes("COMPLETED")) color="#16a34a";
+
+    if(status.includes("ACTCOMP")) color="#16a34a";
+
+    if(status.includes("CONFIG")) color="#2563eb";
+
+    if(status.includes("OGP")) color="#facc15";
+
+    return `
+
+    <span
+    style="
+    color:white;
+    background:${color};
+    padding:4px 10px;
+    border-radius:8px;
+    font-size:12px;
+    ">
+
+    ${status}
+
+    </span>
 
     `;
 
-    return html;
-
 }
-//=====================================
-// OPEN CLOSE
-//=====================================
 
-function toggleTechnician(nama){
 
-    const id = "tech-"+slugify(nama);
 
-    const div=document.getElementById(id);
+//=======================================
+// CHECKLIST
+//=======================================
 
-    if(div.style.display=="none"){
+function toggleWO(index,checked){
 
-        div.style.display="block";
+    monitoringData[index].visible=checked;
 
-    }else{
-
-        div.style.display="none";
-
-    }
-
-}
-//=====================================
-// SLUG
-//=====================================
-
-function slugify(text){
-
-    return text
-
-        .replace(/\s+/g,"-")
-
-        .replace(/&/g,"")
-
-        .replace(/\//g,"")
-
-        .toLowerCase();
+    drawMarkers();
 
 }
