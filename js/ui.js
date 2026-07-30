@@ -8,7 +8,7 @@
 
 function dashboardSummary(){
 
-    document.getElementById("totalWO").innerHTML = monitoringData.length;
+    document.getElementById("totalWO").innerHTML = filteredData.length;
 
     let completed=0;
     let config=0;
@@ -17,7 +17,7 @@ function dashboardSummary(){
 
     const teknisi=new Set();
 
-    monitoringData.forEach(row=>{
+    filteredData.forEach(row=>{
 
         teknisi.add(row.teknisi);
 
@@ -34,13 +34,15 @@ function dashboardSummary(){
 
         else
             kendala++;
+
     });
 
-    document.getElementById("completed").innerHTML=completed;
-    document.getElementById("config").innerHTML=config;
-    document.getElementById("ogp").innerHTML=ogp;
-    document.getElementById("kendala").innerHTML=kendala;
-    document.getElementById("teknisiAktif").innerHTML=teknisi.size;
+    document.getElementById("completed").innerHTML = completed;
+    document.getElementById("config").innerHTML = config;
+    document.getElementById("ogp").innerHTML = ogp;
+    document.getElementById("kendala").innerHTML = kendala;
+    document.getElementById("teknisiAktif").innerHTML = teknisi.size;
+
 }
 
 //=======================================
@@ -53,7 +55,7 @@ function buildWOList(){
 
     let teknisiGroup = {};
 
-    monitoringData.forEach((row,index)=>{
+    filteredData.forEach((row,index)=>{
 
         if(!teknisiGroup[row.teknisi]){
 
@@ -61,7 +63,7 @@ function buildWOList(){
 
         }
 
-        row.index=index;
+        row.index = monitoringData.indexOf(row);
 
         teknisiGroup[row.teknisi].push(row);
 
