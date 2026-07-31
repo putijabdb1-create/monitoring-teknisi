@@ -271,7 +271,10 @@ function shortName(nama){
 }
 function statusColor(status){
 
-    status=(status||"").toUpperCase();
+    status = (status || "").trim().toUpperCase();
+
+    // Belum ada status → Hitam
+    if(status === "") return "#000000";
 
     if(status.includes("ACTCOMP")) return "#16a34a";
 
@@ -281,6 +284,7 @@ function statusColor(status){
 
     if(status.includes("OGP")) return "#f59e0b";
 
+    // Status lain (kendala)
     return "#dc2626";
 
 }
