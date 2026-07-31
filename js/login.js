@@ -7,7 +7,7 @@ document.getElementById("btnLogin").onclick=function(){
     const username=document.getElementById("username").value;
     const password=document.getElementById("password").value;
 
-    if(username=="admin" && password=="12345"){
+    if(username=="putija" && password=="putija123"){
 
         sessionStorage.setItem("login","true");
         sessionStorage.setItem("username",username);
