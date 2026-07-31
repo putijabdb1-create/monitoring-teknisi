@@ -2,25 +2,96 @@
  * LOGIN ENGINE
  *************************************************/
 
-document.getElementById("btnLogin").onclick=function(){
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzp1pGPPjLr26534rC7LAy1WgDIAONBXUm5Wdysz8Ddqtu2GhcBbi0C0PLnyWJUQ20x/exec";
 
-    const username=document.getElementById("username").value;
-    const password=document.getElementById("password").value;
+document.getElementById("btnLogin").onclick = login;
 
-    if(username=="putija" && password=="putija123"){
+document.getElementById("password").addEventListener("keypress",function(e){
 
-        sessionStorage.setItem("login","true");
-        sessionStorage.setItem("username",username);
-        sessionStorage.setItem("role","ADMIN");
-        sessionStorage.setItem("loginTime",Date.now());
-        sessionStorage.setItem("lastActivity",Date.now());
+    if(e.key=="Enter"){
 
-        location.href="index.html";
-
-    }else{
-
-        alert("Username atau Password salah.");
+        login();
 
     }
+
+});
+
+async function login(){
+
+    const username=document.getElementById("username").value.trim();
+
+    const password=document.getElementById("password").value.trim();
+
+    const info=document.getElementById("loginInfo");
+
+    if(username=="putija" || password=="putija123"){
+
+        info.innerHTML="Username dan Password wajib diisi.";
+
+        return;
+
+    }
+
+    info.innerHTML="Memeriksa Login...";
+
+    try{
+
+        const response=await fetch(API_URL,{
+
+            method:"POST",
+
+            body:JSON.stringify({
+
+                action:"login",
+
+                username:username,
+
+                password:password
+
+            })
+
+        });
+
+        const data=await response.json();
+
+        if(data.success){
+
+            sessionStorage.setItem("login","true");
+
+            sessionStorage.setItem("username",username);
+
+            sessionStorage.setItem("nama",data.nama);
+
+            sessionStorage.setItem("role",data.role);
+
+            sessionStorage.setItem("workzone",data.workzone);
+
+            sessionStorage.setItem("loginTime",Date.now());
+
+            sessionStorage.setItem("lastActivity",Date.now());
+
+            location.href="index.html";
+
+        }else{
+
+            info.innerHTML=data.message;
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        info.innerHTML="Tidak dapat terhubung ke server.";
+
+    }
+
+}
+document.getElementById("showPass").onclick=function(){
+
+    const p=document.getElementById("password");
+
+    p.type=p.type=="password"?"text":"password";
 
 }
