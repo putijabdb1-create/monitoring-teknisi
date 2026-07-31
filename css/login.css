@@ -1,0 +1,351 @@
+/*************************************************
+ * PT PUTRA TIMUR JAYA
+ * LOGIN V3
+ *************************************************/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+    overflow:hidden;
+
+    font-family:'Segoe UI',sans-serif;
+
+}
+
+/*=========================================
+BACKGROUND
+=========================================*/
+
+body{
+
+    background:
+    radial-gradient(circle at top,#2563eb 0%,#0f172a 55%,#020617 100%);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    position:relative;
+
+}
+
+/*=========================================
+PARTICLE
+=========================================*/
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    radial-gradient(#38bdf8 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    opacity:.12;
+
+    animation:bgMove 30s linear infinite;
+
+}
+
+@keyframes bgMove{
+
+    from{
+
+        transform:translateY(0);
+
+    }
+
+    to{
+
+        transform:translateY(-45px);
+
+    }
+
+}
+
+/*=========================================
+NETWORK LINE
+=========================================*/
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+    linear-gradient(
+    135deg,
+    transparent 48%,
+    rgba(59,130,246,.08) 50%,
+    transparent 52%
+    );
+
+    background-size:260px 260px;
+
+    animation:network 15s linear infinite;
+
+}
+
+@keyframes network{
+
+    from{
+
+        background-position:0 0;
+
+    }
+
+    to{
+
+        background-position:260px 260px;
+
+    }
+
+}
+
+/*=========================================
+LOGIN WRAPPER
+=========================================*/
+
+.login-wrapper{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:10;
+
+}
+
+/*=========================================
+CARD
+=========================================*/
+
+.login-card{
+
+    width:420px;
+
+    padding:45px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    box-shadow:
+
+    0 20px 60px rgba(0,0,0,.45);
+
+    animation:fadeUp .8s ease;
+
+}
+
+/*=========================================
+ANIMATION
+=========================================*/
+
+@keyframes fadeUp{
+
+    from{
+
+        transform:translateY(30px);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateY(0);
+
+        opacity:1;
+
+    }
+
+}
+
+/*=========================================
+LOGO
+=========================================*/
+
+.logo{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:42px;
+
+    box-shadow:
+
+    0 0 30px rgba(37,99,235,.6);
+
+}
+
+/*=========================================
+TITLE
+=========================================*/
+
+.login-card h2{
+
+    margin-top:20px;
+
+    color:white;
+
+    text-align:center;
+
+    font-weight:700;
+
+}
+
+.login-card p{
+
+    color:#cbd5e1;
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+/*=========================================
+LABEL
+=========================================*/
+
+.login-card label{
+
+    color:white;
+
+    margin-bottom:6px;
+
+}
+
+/*=========================================
+INPUT
+=========================================*/
+
+.form-control{
+
+    height:48px;
+
+    border-radius:12px;
+
+    border:none;
+
+    padding-left:16px;
+
+    background:rgba(255,255,255,.95);
+
+}
+
+.form-control:focus{
+
+    box-shadow:
+
+    0 0 0 3px rgba(59,130,246,.35);
+
+}
+
+/*=========================================
+BUTTON
+=========================================*/
+
+.btn-primary{
+
+    height:50px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    font-size:16px;
+
+    background:#2563eb;
+
+    border:none;
+
+    transition:.25s;
+
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-2px);
+
+    background:#1d4ed8;
+
+}
+
+/*=========================================
+LOGIN INFO
+=========================================*/
+
+#loginInfo{
+
+    min-height:22px;
+
+    font-size:14px;
+
+}
+
+/*=========================================
+FOOTER
+=========================================*/
+
+.login-footer{
+
+    position:absolute;
+
+    bottom:18px;
+
+    width:100%;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    z-index:20;
+
+}
