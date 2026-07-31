@@ -20,15 +20,22 @@ document.getElementById("password").addEventListener("keypress",function(e){
 async function login(){
 
     const username=document.getElementById("username").value.trim();
-
     const password=document.getElementById("password").value.trim();
+	
+	console.log("Username =", "[" + username + "]");
+	console.log("Password =", "[" + password + "]");
 
     const info=document.getElementById("loginInfo");
 
-     if(username!="putija" || password!="putija123"){
-    info.innerHTML="Username atau Password salah.";
+	if(username !== "putija"){
+    info.innerHTML = "Username salah";
     return;
-    }
+	}
+
+	if(password !== "putija123"){
+    info.innerHTML = "Password salah";
+    return;
+	}
 
     info.innerHTML="Memeriksa Login...";
 
