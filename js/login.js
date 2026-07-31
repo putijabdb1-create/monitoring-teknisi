@@ -27,16 +27,6 @@ async function login(){
 
     const info=document.getElementById("loginInfo");
 
-	if(username !== "putija"){
-    info.innerHTML = "Username salah";
-    return;
-	}
-
-	if(password !== "putija123"){
-    info.innerHTML = "Password salah";
-    return;
-	}
-
     info.innerHTML="Memeriksa Login...";
 
     try{
