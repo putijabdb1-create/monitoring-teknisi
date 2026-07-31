@@ -40,16 +40,12 @@ async function login(){
     info.innerHTML="Memeriksa Login...";
 
     try{
-
 const response = await fetch(
-
     API_URL +
     "?action=login" +
     "&username=" + encodeURIComponent(username) +
     "&password=" + encodeURIComponent(password)
-
 	);
-
         const data=await response.json();
 
         if(data.success){
