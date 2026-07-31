@@ -25,13 +25,10 @@ async function login(){
 
     const info=document.getElementById("loginInfo");
 
-       if(username!="putija" || password!="putija123"){
-
-        info.innerHTML="Username atau Password salah.";
-
-        return;
-
-        }
+     if(username!="putija" || password!="putija123"){
+    info.innerHTML="Username atau Password salah.";
+    return;
+    }
 
     info.innerHTML="Memeriksa Login...";
 
