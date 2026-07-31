@@ -539,3 +539,41 @@ function removeZone(zone){
     applyFilter();
 
 }
+
+//====================================
+// REFRESH DATA TANPA RESET FILTER
+//====================================
+
+async function refreshMonitoring(){
+
+    try{
+
+        const response = await fetch(
+            API_URL + "?action=getData",
+            {
+                method:"GET",
+                cache:"no-cache"
+            }
+        );
+
+        if(!response.ok){
+
+            throw new Error("HTTP " + response.status);
+
+        }
+
+        // Update data saja
+        monitoringData = await response.json();
+
+        // Langsung gunakan filter yang sedang aktif
+        applyFilter();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Refresh gagal.");
+
+    }
+
+}
