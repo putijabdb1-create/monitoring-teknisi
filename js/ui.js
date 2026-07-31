@@ -170,13 +170,11 @@ function statusBadge(status){
 	status=(status || "").toUpperCase();
 
 	let color="#111827"; // Hitam = belum ada status
-
 	if(status.includes("COMPLETED")) color="#16a34a";
 	else if(status.includes("ACTCOMP")) color="#16a34a";
 	else if(status.includes("CONFIG")) color="#2563eb";
 	else if(status.includes("OGP")) color="#facc15";
 	else if(status!="") color="#dc2626"; // Status lain = merah (kendala)
-	
     return `
 
     <span
