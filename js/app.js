@@ -79,3 +79,15 @@ setInterval(function(){
     }
 
 },60000);
+
+document.getElementById("btnLogout").onclick=function(){
+
+    if(confirm("Logout ?")){
+
+        sessionStorage.clear();
+
+        location.replace("login.html");
+
+    }
+
+}
