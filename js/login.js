@@ -41,21 +41,25 @@ async function login(){
 
     try{
 
-        const response=await fetch(API_URL,{
+	const response = await fetch(API_URL,{
 
-            method:"POST",
+		method:"POST",
 
-            body:JSON.stringify({
+		headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+		},
 
-                action:"login",
+		body:JSON.stringify({
 
-                username:username,
+        action:"login",
 
-                password:password
+        username:username,
 
-            })
+        password:password
 
-        });
+		})
+
+	});
 
         const data=await response.json();
 
