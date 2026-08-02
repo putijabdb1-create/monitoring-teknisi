@@ -929,7 +929,7 @@ setInterval(()=>{
     if(refreshRunning) return;
 
     refreshMonitoring();
-},500000);
+},300000);
 console.log(
 
 "%cMonitoring Teknisi V4 Stable",
