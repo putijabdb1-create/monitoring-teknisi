@@ -709,34 +709,20 @@ ACTIVE FILTER
     gap:8px;
 
     font-size:13px;
-
 }
-
 .filter-chip span{
-
     cursor:pointer;
-
     font-weight:bold;
-
 }
 .spin{
-
     animation:spin .8s linear infinite;
-
 }
-
 @keyframes spin{
-
     from{
-
         transform:rotate(0deg);
-
     }
-
     to{
-
         transform:rotate(360deg);
-
     }
 
 }
