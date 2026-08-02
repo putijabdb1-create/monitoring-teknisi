@@ -1,11 +1,5 @@
 /*************************************************
  * PT PUTRA TIMUR JAYA
- * MONITORING TEKNISI V3
- * API ENGINE
- *************************************************/
-
-/*************************************************
- * PT PUTRA TIMUR JAYA
  * MONITORING TEKNISI V4 STABLE
  * API ENGINE
  *************************************************/
@@ -47,9 +41,7 @@ async function loadMonitoring(){
     if(loading) return;
 
     loading=true;
-	document.getElementById("woList").innerHTML =
-
-`
+	document.getElementById("woList").innerHTML = `
 	<div class="text-center p-4">
 
 	<div class="spinner-border text-primary"></div>
@@ -59,7 +51,8 @@ async function loadMonitoring(){
 	Loading Monitoring...
 
 	</div>
-	;
+	`;
+
 	updateServerStatus("loading");
     try{
 
@@ -78,16 +71,20 @@ async function loadMonitoring(){
         monitoringData=
 
         await response.json();
+		
+		console.log(monitoringData);
 
         filteredData=[...monitoringData];
 
         loadFilter();
 
-		if(!multiSelectLoaded){
-	
-		loadFilter();
+	if(!multiSelectLoaded){
 
-		}
+    initMultiSelect();
+
+    multiSelectLoaded = true;
+
+	}
 
         currentDataHash =
 
@@ -152,6 +149,11 @@ async function refreshMonitoring(){
             API_URL + "?action=getData"
 
         );
+		if(!response.ok){
+
+		throw new Error("HTTP "+response.status);
+
+		}
 
         const data = await response.json();
 
