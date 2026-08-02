@@ -4,64 +4,232 @@
  * API ENGINE
  *************************************************/
 
+/*************************************************
+ * PT PUTRA TIMUR JAYA
+ * MONITORING TEKNISI V4 STABLE
+ * API ENGINE
+ *************************************************/
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzp1pGPPjLr26534rC7LAy1WgDIAONBXUm5Wdysz8Ddqtu2GhcBbi0C0PLnyWJUQ20x/exec";
 
-// Data Global
-let monitoringData = [];   // Semua data dari Apps Script
-let filteredData = [];     // Data hasil filter
+//======================================
+// GLOBAL
+//======================================
 
-//====================================
-// MULTI SELECT
-//====================================
+let monitoringData = [];
+
+let filteredData = [];
 
 let selectedTeknisi = [];
+
 let selectedZone = [];
+
 let multiSelectLoaded = false;
-// ===============================
-// LOAD DATA
-// ===============================
 
-async function loadMonitoring(){
+let loading = false;
 
+let refreshRunning = false;
+//======================================
+// CACHE
+//======================================
+
+let visibleMap = {};
+
+let currentDataHash = "";
+
+let lastRefresh = null;
+
+const FETCH_TIMEOUT = 15000;
+
+async function loadMonitoring(){ 
+
+    if(loading) return;
+
+    loading=true;
+	document.getElementById("woList").innerHTML =
+
+`
+	<div class="text-center p-4">
+
+	<div class="spinner-border text-primary"></div>
+
+	<br>
+
+	Loading Monitoring...
+
+	</div>
+	;
+	updateServerStatus("loading");
     try{
 
-        document.getElementById("detailWO").innerHTML =
-        "Mengambil data dari Google Sheet...";
+        document.getElementById("detailWO").innerHTML=
 
-        const response = await fetch(
-            API_URL + "?action=getData",
-            {
-                method:"GET",
-                mode:"cors",
-                cache:"no-cache"
-            }
+        "Mengambil data monitoring...";
+
+        const response=
+
+        await fetchRetry(
+
+            API_URL+"?action=getData"
+
         );
 
-        if(!response.ok){
-            throw new Error("HTTP " + response.status);
-        }
+        monitoringData=
 
-	monitoringData = await response.json();
+        await response.json();
+
+        filteredData=[...monitoringData];
+
+        loadFilter();
+
+		if(!multiSelectLoaded){
 	
-	filteredData = [...monitoringData];
+		loadFilter();
 
-	loadFilter();
+		}
 
-	if(!multiSelectLoaded){
+        currentDataHash =
 
-    initMultiSelect();
+		makeHash(monitoringData);
 
-    multiSelectLoaded = true;
+		applyFilter();
+		updateServerStatus("online");
+    }
+
+    catch(err){
+		updateServerStatus("offline");
+        console.error(err);
+
+        document.getElementById("detailWO").innerHTML=`
+
+        <div style="color:red">
+
+        Gagal mengambil data.
+
+        <br>
+
+        ${err.message}
+
+        </div>
+
+        `;
+
+    }
+
+    finally{
+
+        loading=false;
+
+    }
+
+}
+
+//======================================
+// REFRESH MONITORING
+//======================================
+
+async function refreshMonitoring(){
+
+    if(refreshRunning) return;
+
+    refreshRunning = true;
+
+    const btn = document.getElementById("btnRefresh");
+
+    const oldHTML = btn.innerHTML;
+
+    btn.disabled = true;
+
+    btn.innerHTML =
+
+    '<i class="bi bi-arrow-repeat spin"></i> Loading...';
+
+    try{
+		updateServerStatus("loading");
+        const response = await fetchRetry(
+
+            API_URL + "?action=getData"
+
+        );
+
+        const data = await response.json();
+
+     //-------------------------------------------------
+	// Simpan status checkbox WO
+	//-------------------------------------------------
+
+saveVisibleState();
+
+const newHash = makeHash(data);
+
+// Jika data sama, tidak perlu render ulang berlebihan
+if(newHash === currentDataHash){
+
+    console.log("Tidak ada perubahan data.");
 
 	}
 
+	// Update data terbaru
+	monitoringData = data;
+
+	// Kembalikan status checkbox WO
+	restoreVisibleState();
+
+	// Simpan hash terbaru
+	currentDataHash = newHash;
+
+	lastRefresh = new Date();
+
+	// Render ulang sesuai filter yang sedang aktif
 	applyFilter();
-    }catch(error){
+	updateServerStatus("online");
+	console.log(
 
-        console.error(error);
+		"Refresh sukses :",
 
-        alert("Gagal mengambil data : " + error.message);
+		monitoringData.length,
+
+		"WO"
+
+	);
+
+	console.log(
+    "Last Refresh :",
+    lastRefresh
+	);
+
+    }
+
+    catch(err){
+		updateServerStatus("offline");
+        console.error(err);
+
+        document.getElementById("detailWO").innerHTML=
+
+        `
+
+        <div style="color:#dc2626">
+
+        ⚠ Tidak dapat mengambil data terbaru.
+
+        <br>
+
+        Menampilkan data terakhir.
+
+        </div>
+
+        `;
+
+    }
+
+    finally{
+
+        refreshRunning = false;
+
+        btn.disabled = false;
+
+        btn.innerHTML = oldHTML;
 
     }
 
@@ -175,15 +343,28 @@ ${row.teknisi}
 
     });
 
-    console.log(filteredData);
-	dashboardSummary();
+	console.log(
 
-	buildWOList();
+	"Filtered :",
 
-	drawMarkers();
+	filteredData.length
 
-	document.getElementById("detailWO").innerHTML=
-	"Pilih marker atau WO.";
+	);
+
+requestAnimationFrame(()=>{
+
+    dashboardSummary();
+
+    buildWOList();
+
+    drawMarkers();
+
+    document.getElementById("detailWO").innerHTML =
+    "Pilih marker atau WO.";
+
+    renderFilterChip();
+
+});
 }
 
 //================================
@@ -199,7 +380,9 @@ window.addEventListener("DOMContentLoaded",()=>{
     document
     .getElementById("searchWO")
     .addEventListener("keyup",applyFilter);
-
+	document
+	.getElementById("btnRefresh")
+	.addEventListener("click",refreshMonitoring);
 });
 //====================================
 // TEKNISI FILTER
@@ -350,7 +533,6 @@ function getSelectedFilter(){
         ? `📍 ${selectedZone.length} Zone Dipilih <i class="bi bi-chevron-down"></i>`
 
         : `📍 Semua Work Zone <i class="bi bi-chevron-down"></i>`;
-		renderFilterChip();
 }
 //====================================
 // EVENT MULTI SELECT
@@ -540,40 +722,225 @@ function removeZone(zone){
 
 }
 
-//====================================
-// REFRESH DATA TANPA RESET FILTER
-//====================================
+//======================================
+// STATUS SERVER
+//======================================
 
-async function refreshMonitoring(){
+function updateServerStatus(status){
 
-    try{
+    const live = document.querySelector(".live");
 
-        const response = await fetch(
-            API_URL + "?action=getData",
-            {
-                method:"GET",
-                cache:"no-cache"
-            }
-        );
+    if(!live) return;
 
-        if(!response.ok){
+    switch(status){
 
-            throw new Error("HTTP " + response.status);
+        case "loading":
 
-        }
+            live.innerHTML = `
+                <span class="badge bg-warning">
+                    SYNC...
+                </span>
+                <span id="jam"></span>
+            `;
 
-        // Update data saja
-        monitoringData = await response.json();
+        break;
 
-        // Langsung gunakan filter yang sedang aktif
-        applyFilter();
+        case "online":
 
-    }catch(err){
+            live.innerHTML = `
+                <span class="badge bg-success">
+                    LIVE
+                </span>
+                <span id="jam"></span>
+            `;
 
-        console.error(err);
+        break;
 
-        alert("Refresh gagal.");
+        case "offline":
+
+            live.innerHTML = `
+                <span class="badge bg-danger">
+                    OFFLINE
+                </span>
+                <span id="jam"></span>
+            `;
+
+        break;
 
     }
 
 }
+//======================================
+// FETCH ENGINE
+//======================================
+
+async function fetchRetry(url,retry=3){
+
+    for(let i=1;i<=retry;i++){
+
+        try{
+
+            const controller=new AbortController();
+
+            const timer=setTimeout(()=>{
+
+                controller.abort();
+
+            },FETCH_TIMEOUT);
+
+            const response=await fetch(
+
+                url+(url.includes("?")?"&":"?")+"_="+Date.now(),
+
+                {
+
+                    method:"GET",
+
+                    cache:"no-store",
+
+                    signal:controller.signal
+
+                }
+
+            );
+
+            clearTimeout(timer);
+
+            if(response.ok){
+
+                return response;
+
+            }
+
+            console.warn(
+
+                "Retry",
+
+                i,
+
+                response.status
+
+            );
+
+        }
+
+        catch(err){
+
+            console.warn(
+
+                "Retry",
+
+                i,
+
+                err.message
+
+            );
+
+        }
+
+        await new Promise(r=>setTimeout(r,1000));
+
+    }
+
+    throw new Error("Server Google tidak merespon.");
+
+}
+//======================================
+// SIMPAN CHECKBOX WO
+//======================================
+
+function saveVisibleState(){
+
+    visibleMap = {};
+
+    monitoringData.forEach(row=>{
+
+        visibleMap[row.wo] =
+
+        row.visible !== false;
+
+    });
+
+}
+//======================================
+// KEMBALIKAN CHECKBOX WO
+//======================================
+
+function restoreVisibleState(){
+
+    monitoringData.forEach(row=>{
+
+        if(
+
+            visibleMap.hasOwnProperty(row.wo)
+
+        ){
+
+            row.visible =
+
+            visibleMap[row.wo];
+
+        }
+
+        else{
+
+            row.visible = true;
+
+        }
+
+    });
+
+}
+//======================================
+// HASH DATA
+//======================================
+
+function makeHash(data){
+
+    return JSON.stringify(
+
+        data.map(x=>
+
+            x.wo +
+
+            x.status +
+
+            x.teknisi +
+
+            x.keterangan
+
+        )
+
+    );
+
+}
+//======================================
+// AUTO REFRESH
+//======================================
+
+setInterval(()=>{
+
+    if(document.hidden) return;
+
+    if(loading) return;
+
+    if(refreshRunning) return;
+
+    refreshMonitoring();
+
+},30000);
+
+
+console.log(
+
+"%cMonitoring Teknisi V4 Stable",
+
+"color:#2563eb;font-size:18px;font-weight:bold"
+
+);
+
+console.log(
+
+"PT Putra Timur Jaya"
+
+);
