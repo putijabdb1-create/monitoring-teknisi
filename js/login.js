@@ -26,16 +26,58 @@ async function login(){
 	console.log("Password =", "[" + password + "]");
 
     const info=document.getElementById("loginInfo");
+	if(username === "" || password === ""){
 
-    info.innerHTML="Memeriksa Login...";
+    info.innerHTML = "Username dan Password wajib diisi.";
+
+    return;
+
+	}
+    const btn = document.getElementById("btnLogin");
+
+	btn.disabled = true;
+
+	btn.innerHTML = `
+	<i class="bi bi-arrow-repeat spin"></i>
+	Memeriksa...
+	`;
+info.innerHTML = "Menghubungkan ke server...";
 
     try{
+const controller = new AbortController();
+
+const timer = setTimeout(() => {
+
+    controller.abort();
+
+},10000);
+
 const response = await fetch(
+
     API_URL +
     "?action=login" +
     "&username=" + encodeURIComponent(username) +
-    "&password=" + encodeURIComponent(password)
-	);
+    "&password=" + encodeURIComponent(password) +
+    "&_=" + Date.now(),
+
+    {
+
+        cache:"no-store",
+
+        signal:controller.signal
+
+    }
+
+);
+
+clearTimeout(timer);
+
+if(!response.ok){
+
+    throw new Error("HTTP " + response.status);
+
+}
+clearTimeout(timer);
         const data=await response.json();
 
         if(data.success){
@@ -62,13 +104,28 @@ const response = await fetch(
 
         }
 
-    }catch(err){
+	}catch(err){
 
-        console.log(err);
+    console.error(err);
 
-        info.innerHTML="Tidak dapat terhubung ke server.";
+    info.innerHTML =
 
-    }
+    "Tidak dapat terhubung ke server.";
+
+	}
+	finally{
+
+    btn.disabled = false;
+
+    btn.innerHTML = `
+
+        <i class="bi bi-box-arrow-in-right"></i>
+
+        LOGIN
+
+    `;
+
+	}
 
 }
 document.getElementById("showPass").onclick=function(){
