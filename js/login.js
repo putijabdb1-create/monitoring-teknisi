@@ -1,7 +1,7 @@
 /*************************************************
  * LOGIN ENGINE
  *************************************************/
-const t0 = performance.now();
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzp1pGPPjLr26534rC7LAy1WgDIAONBXUm5Wdysz8Ddqtu2GhcBbi0C0PLnyWJUQ20x/exec";
 
@@ -12,7 +12,7 @@ document.getElementById("password").addEventListener("keypress",function(e){
     if(e.key=="Enter"){
 
         login();
-
+	const t0 = performance.now();
     }
 
 });
