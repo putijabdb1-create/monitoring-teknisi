@@ -34,7 +34,7 @@ let currentDataHash = "";
 
 let lastRefresh = null;
 
-const FETCH_TIMEOUT = 15000;
+const FETCH_TIMEOUT = 30000;
 
 async function loadMonitoring(){ 
 
@@ -76,9 +76,9 @@ async function loadMonitoring(){
 
         filteredData=[...monitoringData];
 
-        loadFilter();
-
 	if(!multiSelectLoaded){
+
+    loadFilter();
 
     initMultiSelect();
 
@@ -95,7 +95,9 @@ async function loadMonitoring(){
     }
 
     catch(err){
-		updateServerStatus("offline");
+		console.warn("Refresh gagal, menggunakan data terakhir.");
+		updateServerStatus("warning");
+		
         console.error(err);
 
         document.getElementById("detailWO").innerHTML=`
@@ -144,18 +146,24 @@ async function refreshMonitoring(){
 
     try{
 		updateServerStatus("loading");
-        const response = await fetchRetry(
+	const response = await fetchRetry(
 
-            API_URL + "?action=getData"
+    API_URL + "?action=getData"
 
-        );
-		if(!response.ok){
+	);
 
-		throw new Error("HTTP "+response.status);
+	const data = await response.json();
 
-		}
+	if(!Array.isArray(data)){
 
-        const data = await response.json();
+    throw new Error("Data dari server tidak valid.");
+	}
+
+	monitoringData = data;
+
+	console.log(monitoringData);
+
+	filteredData = [...monitoringData];
 
      //-------------------------------------------------
 	// Simpan status checkbox WO
@@ -166,12 +174,11 @@ saveVisibleState();
 const newHash = makeHash(data);
 
 // Jika data sama, tidak perlu render ulang berlebihan
-if(newHash === currentDataHash){
-
+	if(newHash === currentDataHash){
     console.log("Tidak ada perubahan data.");
-
+    updateServerStatus("online");
+    return;
 	}
-
 	// Update data terbaru
 	monitoringData = data;
 
@@ -204,7 +211,17 @@ if(newHash === currentDataHash){
     }
 
     catch(err){
-		updateServerStatus("offline");
+		console.warn("Menggunakan data terakhir.");
+
+		applyFilter();
+
+		document.getElementById("detailWO").innerHTML = `
+		<div style="color:#f59e0b">
+		⚠ Tidak dapat mengambil data terbaru.
+		<br>
+		Menampilkan data terakhir.
+		</div>
+		`;
         console.error(err);
 
         document.getElementById("detailWO").innerHTML=
@@ -776,21 +793,23 @@ function updateServerStatus(status){
 // FETCH ENGINE
 //======================================
 
-async function fetchRetry(url,retry=3){
+async function fetchRetry(url,retry=5){
 
     for(let i=1;i<=retry;i++){
 
+        let timer;
+
         try{
 
-            const controller=new AbortController();
+            const controller = new AbortController();
 
-            const timer=setTimeout(()=>{
+            timer = setTimeout(()=>{
 
                 controller.abort();
 
             },FETCH_TIMEOUT);
 
-            const response=await fetch(
+            const response = await fetch(
 
                 url+(url.includes("?")?"&":"?")+"_="+Date.now(),
 
@@ -806,23 +825,13 @@ async function fetchRetry(url,retry=3){
 
             );
 
-            clearTimeout(timer);
-
             if(response.ok){
 
                 return response;
 
             }
 
-            console.warn(
-
-                "Retry",
-
-                i,
-
-                response.status
-
-            );
+            throw new Error("HTTP "+response.status);
 
         }
 
@@ -840,7 +849,13 @@ async function fetchRetry(url,retry=3){
 
         }
 
-        await new Promise(r=>setTimeout(r,1000));
+        finally{
+
+            clearTimeout(timer);
+
+        }
+
+        await new Promise(r=>setTimeout(r,i*2000));
 
     }
 
