@@ -1,7 +1,7 @@
 /*************************************************
  * LOGIN ENGINE
  *************************************************/
-
+const t0 = performance.now();
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzp1pGPPjLr26534rC7LAy1WgDIAONBXUm5Wdysz8Ddqtu2GhcBbi0C0PLnyWJUQ20x/exec";
 
@@ -79,7 +79,11 @@ if(!response.ok){
 }
 clearTimeout(timer);
         const data=await response.json();
-
+	console.log(
+  	  "Login selesai dalam",
+  	  ((performance.now() - t0) / 1000).toFixed(2),
+ 	   "detik"
+	);
         if(data.success){
 
             sessionStorage.setItem("login","true");
