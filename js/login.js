@@ -12,13 +12,13 @@ document.getElementById("password").addEventListener("keypress",function(e){
     if(e.key=="Enter"){
 
         login();
-	const t0 = performance.now();
+
     }
 
 });
 
 async function login(){
-
+	const t0 = performance.now();
     const username=document.getElementById("username").value.trim();
     const password=document.getElementById("password").value.trim();
 	
@@ -50,7 +50,7 @@ const timer = setTimeout(() => {
 
     controller.abort();
 
-},10000);
+},30000);
 
 const response = await fetch(
 
@@ -74,10 +74,9 @@ clearTimeout(timer);
 
 if(!response.ok){
 
-    throw new Error("HTTP " + response.status);
+    throw new Error("HTTP "+response.status);
 
 }
-clearTimeout(timer);
         const data=await response.json();
 	console.log(
   	  "Login selesai dalam",
