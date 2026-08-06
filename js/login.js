@@ -44,14 +44,6 @@ async function login(){
 info.innerHTML = "Menghubungkan ke server...";
 
     try{
-const controller = new AbortController();
-
-const timer = setTimeout(() => {
-
-    controller.abort();
-
-},30000);
-
 const response = await fetch(
 
     API_URL +
@@ -62,15 +54,34 @@ const response = await fetch(
 
     {
 
-        cache:"no-store",
-
-        signal:controller.signal
+        cache:"no-store"
 
     }
 
 );
+const response = await Promise.race([
 
-clearTimeout(timer);
+    fetch(
+        API_URL +
+        "?action=login" +
+        "&username=" + encodeURIComponent(username) +
+        "&password=" + encodeURIComponent(password) +
+        "&_=" + Date.now(),
+        {
+            cache:"no-store"
+        }
+    ),
+
+    new Promise((_, reject)=>
+
+        setTimeout(
+            ()=>reject(new Error("Timeout")),
+            30000
+        )
+
+    )
+
+]);
 
 if(!response.ok){
 
@@ -136,5 +147,34 @@ document.getElementById("showPass").onclick=function(){
     const p=document.getElementById("password");
 
     p.type=p.type=="password"?"text":"password";
+
+}
+async function loginRequest(url){
+
+    for(let i=1;i<=2;i++){
+
+        try{
+
+            const response = await fetch(url,{cache:"no-store"});
+
+            if(response.ok){
+
+                return response;
+
+            }
+
+        }catch(err){
+
+            if(i===2){
+
+                throw err;
+
+            }
+
+            await new Promise(r=>setTimeout(r,1500));
+
+        }
+
+    }
 
 }
