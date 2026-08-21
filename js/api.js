@@ -34,47 +34,16 @@ let currentDataHash = "";
 
 let lastRefresh = null;
 
+const FETCH_TIMEOUT = 15000;
 const FETCH_TIMEOUT = 30000;
 
 async function loadMonitoring(){ 
 
-    if(loading) return;
-
-    loading=true;
-	document.getElementById("woList").innerHTML = `
-	<div class="text-center p-4">
-
-	<div class="spinner-border text-primary"></div>
-
-	<br>
-
-	Loading Monitoring...
-
-	</div>
-	`;
-
-	updateServerStatus("loading");
-    try{
-
-        document.getElementById("detailWO").innerHTML=
-
-        "Mengambil data monitoring...";
-
-        const response=
-
-        await fetchRetry(
-
-            API_URL+"?action=getData"
-
-        );
-
-        monitoringData=
-
-        await response.json();
-		
-		console.log(monitoringData);
+@@ -76,10 +76,10 @@
 
         filteredData=[...monitoringData];
+
+        loadFilter();
 
 	if(!multiSelectLoaded){
 
@@ -83,73 +52,29 @@ async function loadMonitoring(){
     initMultiSelect();
 
     multiSelectLoaded = true;
-
-	}
-
-        currentDataHash =
-
-		makeHash(monitoringData);
-
-		applyFilter();
-		updateServerStatus("online");
+@@ -95,7 +95,9 @@
     }
 
     catch(err){
+		updateServerStatus("offline");
 		console.warn("Refresh gagal, menggunakan data terakhir.");
 		updateServerStatus("warning");
 		
         console.error(err);
 
         document.getElementById("detailWO").innerHTML=`
-
-        <div style="color:red">
-
-        Gagal mengambil data.
-
-        <br>
-
-        ${err.message}
-
-        </div>
-
-        `;
-
-    }
-
-    finally{
-
-        loading=false;
-
-    }
-
-}
-
-//======================================
-// REFRESH MONITORING
-//======================================
-
-async function refreshMonitoring(){
-
-    if(refreshRunning) return;
-
-    refreshRunning = true;
-
-    const btn = document.getElementById("btnRefresh");
-
-    const oldHTML = btn.innerHTML;
-
-    btn.disabled = true;
-
-    btn.innerHTML =
-
-    '<i class="bi bi-arrow-repeat spin"></i> Loading...';
+@@ -144,802 +146,815 @@
 
     try{
 		updateServerStatus("loading");
+        const response = await fetchRetry(
 	const response = await fetchRetry(
 
+            API_URL + "?action=getData"
     API_URL + "?action=getData"
 
+        );
+		if(!response.ok){
 	);
 
 	const data = await response.json();
@@ -159,10 +84,13 @@ async function refreshMonitoring(){
     throw new Error("Data dari server tidak valid.");
 	}
 
+		throw new Error("HTTP "+response.status);
 	monitoringData = data;
 
+		}
 	console.log(monitoringData);
 
+        const data = await response.json();
 	filteredData = [...monitoringData];
 
      //-------------------------------------------------
@@ -174,11 +102,15 @@ saveVisibleState();
 const newHash = makeHash(data);
 
 // Jika data sama, tidak perlu render ulang berlebihan
+if(newHash === currentDataHash){
+
 	if(newHash === currentDataHash){
     console.log("Tidak ada perubahan data.");
+
     updateServerStatus("online");
     return;
 	}
+
 	// Update data terbaru
 	monitoringData = data;
 
@@ -211,6 +143,7 @@ const newHash = makeHash(data);
     }
 
     catch(err){
+		updateServerStatus("offline");
 		console.warn("Menggunakan data terakhir.");
 
 		applyFilter();
@@ -613,7 +546,7 @@ function initMultiSelect(){
         applyFilter();
 
     };
-	
+
 	//====================================
 // SEARCH TEKNISI
 //====================================
@@ -793,6 +726,7 @@ function updateServerStatus(status){
 // FETCH ENGINE
 //======================================
 
+async function fetchRetry(url,retry=3){
 async function fetchRetry(url,retry=5){
 
     for(let i=1;i<=retry;i++){
@@ -801,14 +735,17 @@ async function fetchRetry(url,retry=5){
 
         try{
 
+            const controller=new AbortController();
             const controller = new AbortController();
 
+            const timer=setTimeout(()=>{
             timer = setTimeout(()=>{
 
                 controller.abort();
 
             },FETCH_TIMEOUT);
 
+            const response=await fetch(
             const response = await fetch(
 
                 url+(url.includes("?")?"&":"?")+"_="+Date.now(),
@@ -825,12 +762,23 @@ async function fetchRetry(url,retry=5){
 
             );
 
+            clearTimeout(timer);
+
             if(response.ok){
 
                 return response;
 
             }
 
+            console.warn(
+
+                "Retry",
+
+                i,
+
+                response.status
+
+            );
             throw new Error("HTTP "+response.status);
 
         }
@@ -849,6 +797,7 @@ async function fetchRetry(url,retry=5){
 
         }
 
+        await new Promise(r=>setTimeout(r,1000));
         finally{
 
             clearTimeout(timer);
